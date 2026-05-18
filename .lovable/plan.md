@@ -1,114 +1,87 @@
-
-# Plano de refinamento — HyroCode
+# Plano de refinamentos HyroCode
 
 ## 1. Navbar — logo maior
-- Aumentar a logo (`hyrocode-logo.png`) de ~28px para ~44–48px de altura.
-- Manter a altura do header inalterada (padding vertical reduzido para compensar) — menu não cresce.
-- Logo nítida, com tamanho equilibrado em mobile/desktop.
+- Em `src/components/site/Navbar.tsx`: aumentar `img` da logo para `h-16 sm:h-20` (sem alterar padding do nav, mantendo a barra com mesma altura visual graças ao `py-1.5`). Ajustar `py` se necessário só para a logo não estourar o círculo.
 
-## 2. Hero — substituir mockup do topo
-- Remover o "painel app.hyrocode.com" atual.
-- Trocar por uma composição visual mais marcante: **mosaico/colagem flutuante** com 3 cards reais (preview de site, dashboard e mobile app) sobrepostos com profundidade, sombras suaves, leve rotação e glow.
-- Geração de 3 novos assets (premium quality, fotorealistas de UI real):
-  - `hero-site.jpg` — preview de website premium (landing real).
-  - `hero-dashboard-v2.jpg` — painel SaaS real.
-  - `hero-mobile.jpg` — tela mobile de app.
+## 2. Footer — restaurar versão anterior
+- Reabrir `src/components/site/Footer.tsx` e voltar à estrutura anterior (logo + nome HyroCode grande centralizado, descrição "HYROCODE cria soluções personalizadas, modernas e funcionais...", ícone único do Instagram, rodapé "Feito com carinho por HyroCode Desenvolvimento · © 2026"). Garantir que está exportado e usado em `routes/index.tsx`.
 
-## 3. Portfólio — realismo, organização e loop automático
-- Cabeçalho reorganizado e centralizado:
-  - Eyebrow: "Portfólio"
-  - Título: "Projetos reais entregues"
-  - Descrição: "Confira alguns dos últimos projetos realizados pela HyroCode — sites, sistemas e plataformas construídos do zero para clientes reais."
-- Reduzir tamanho dos cards: **240×320 mobile / 280×360 desktop** (hoje 280×420 / 320×480).
-- Manter animação em loop **automática contínua** (marquee CSS já presente, garantir suavidade e não pausar no hover do container inteiro — apenas leve slow-down).
-- Substituir as 8 imagens por screenshots **fotorealistas de sites/sistemas reais** (premium quality), cada uma com nome de "cliente" plausível:
-  - Landing SaaS fintech, dashboard de gestão, e-commerce de moda, app mobile de delivery, site institucional de clínica, plataforma de cursos, CRM imobiliário, landing de agência.
-- Cards mostram nome do projeto + categoria curta.
+## 3. Hero — simplificar e animar
+Substituir o mosaico de 3 imagens por **um único visual animado e elegante**:
+- Remover imports de `hero-site`, `hero-dashboard-v2`, `hero-mobile` no Hero.
+- Criar um "orb" central: uma esfera com gradiente da marca, glow pulsante, anéis orbitais em CSS animados (rotate infinito lento), partículas/pontos sutis. Tudo em CSS/SVG puro — leve, sem imagem. Animação contínua suave (não exagerada).
+- Eyebrow chip muda de "Estúdio premium de produto digital" → **"BEM-VINDO À HYROCODE"**.
+- H1 muda para: **"Seu negócio merece um site que vende por você."**
+- Subtítulo: **"Uma nova proposta de site para você que está com baixa conversão. Adquira hoje mesmo sua landing page ou site institucional com tecnologias de alta conversão e design pensado para gerar resultado real."**
 
-## 4. Nova seção "Qual a Nossa Proposta" (antes do Portfólio)
-- Eyebrow: "Nossa proposta"
-- Título: "Transformamos ideias em produtos digitais que vendem"
-- Descrição persuasiva (3–4 linhas) com gatilhos de autoridade, escassez sutil e resultado.
-- Layout centralizado, tipografia grande, fundo com glow sutil.
+## 4. Portfolio — 6 nichos BR, realista, texto em PT
+- Reduzir para 6 projetos com nichos críveis no Brasil:
+  1. Clínica Odontológica (Sorriso Bem Estar)
+  2. Barbearia (Barbearia Don Lucca)
+  3. Estética & Estética Avançada (Lumière Estética)
+  4. Studio de Pilates (Core Pilates Studio)
+  5. Advocacia (Almeida & Ribeiro Advocacia)
+  6. Restaurante (Cantina Bella Massa)
+- Regenerar 6 imagens fotorrealistas (`imagegen` premium) de **mockups de sites reais em português brasileiro**, mostrando hero, menus em PT-BR (Início, Serviços, Sobre, Contato), botões "Agendar agora", "Fale conosco". Substituir `p1..p6` (excluir p7 e p8 ou simplesmente não importá-los).
+- Manter marquee em loop automático.
 
-## 5. Nova seção "Como Funciona" (substitui Process atual visualmente)
-- Eyebrow: "Como funciona"
-- Título: "Obtenha resultados surpreendentes em apenas 4 etapas simples"
-- Subtítulo curto persuasivo.
-- 4 cards numerados com ícones (lucide):
-  1. **Consulta gratuita** — entendemos sua ideia, objetivos e público.
-  2. **Alinhamento** — desenhamos a estratégia, escopo e identidade visual.
-  3. **Desenvolvimento** — construímos com tecnologia de ponta e design premium.
-  4. **Entrega & Check** — testamos, ajustamos e entregamos pronto para vender.
-- Cards com glass, hover sutil, número grande em gradient.
+## 5. Pricing — ajustes
+**Plano 1 — Landing Page Premium (R$ 497 / 12× R$ 49,70):**
+Features substituídas por:
+- Logotipo feito do zero
+- Banners profissionais
+- Design personalizado
+- Estrutura responsiva
+- SEO básico
+- Conteúdo visual
+- Configuração de domínio
+- Garantia de desempenho
+- 2 rodadas completas de alterações
+- Formulário de captura de leads (opcional)
+- Estrutura 100% personalizada
 
-## 6. Nova seção "Quanto Custa" (Pricing)
-- Eyebrow: "Investimento"
-- Título: "Preço que cabe no seu bolso, resultado que impressiona"
-- Subtítulo persuasivo.
-- 2 planos lado a lado:
-  - **Landing Page Premium** — R$ 497 à vista ou 12× R$ 49,70
-    - Logotipo profissional incluso
-    - Design 100% personalizado
-    - Estrutura totalmente responsiva
-    - SEO técnico otimizado
-    - Animações premium
-    - Hospedagem orientada
-    - Entrega em até 7 dias
-  - **Painel / Sistema Web** — R$ 697 à vista ou 12× R$ 69,70 *(destacado "Mais escolhido")*
-    - Tudo do plano Landing
-    - Painel administrativo completo
-    - Banco de dados integrado
-    - Login e área de usuário
-    - Dashboard com métricas
-    - Suporte 30 dias
-- Botão CTA em cada card: **"QUERO ESSE"** (link mailto/WhatsApp).
-- Card destacado com borda gradient e badge.
+**Plano 2 — Sistemas & Painéis Sob Medida (renomear):**
+- Título: **"Sistemas & Painéis Sob Medida"**
+- Preço: **"Valor a consultar"** (sem "à vista"/parcelas)
+- Descrição: para software, painel administrativo, CRM, dashboards e automações personalizadas.
+- Features: Software sob medida · Painel administrativo · CRM personalizado · Integrações com APIs · Banco de dados robusto · Login e permissões · Dashboard com métricas · Escopo personalizado conforme necessidade.
+- Botão muda de "QUERO ESSE" para **"Entrar em contato"** e abre **modal** (não link wpp).
+- Botão do Plano 1 continua "QUERO ESSE" (link wpp).
 
-## 7. Botões com efeito espelho (shine)
-- Adicionar utilitário CSS `.btn-shine` em `styles.css` — pseudo-elemento com gradiente diagonal branco translúcido animando automaticamente em loop (a cada ~3s) atravessando o botão.
-- Aplicar nos CTAs principais: "Iniciar projeto", "Quero esse" e botões de hero.
-- Sem bagunçar layout — overflow-hidden no botão.
+## 6. Modal de contato (novo componente)
+Criar `src/components/site/ContactModal.tsx` usando `Dialog` do shadcn (já instalado):
+- Título: "Vamos conversar sobre seu projeto"
+- Descrição: "Preencha o formulário abaixo e nossa equipe entra em contato em até 24 horas."
+- Campos:
+  - Nome (input texto)
+  - Estado (Select com **todos os 27 estados do Brasil** — AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO)
+  - WhatsApp / Contato (input com máscara simples)
+  - Descrição do projeto (textarea, opcional)
+- Botão "Enviar" com shine.
+- Ao enviar: troca conteúdo do modal para tela de sucesso — ícone check, título "Solicitação enviada com sucesso!", texto "Recebemos seu contato. Em até 24 horas nossa equipe falará com você pelo WhatsApp." + botão "Fechar".
+- Estado interno (`useState`) controla `submitted`. Sem backend — apenas UX (form local). Validação básica obrigatórios.
+- `Pricing.tsx` controla `open` do modal e passa ao componente.
 
-## 8. Remoção do CTA final
-- Remover por completo a seção `FinalCTA` ("Pronto para construir o próximo produto…").
-
-## 9. Footer reformulado
-- Logo + nome HyroCode **centralizados grandes** no topo do footer.
-- Descrição abaixo: "A HyroCode cria soluções digitais personalizadas, modernas e funcionais para destacar o seu negócio online — sites, sistemas e experiências que convertem."
-- Apenas ícone do **Instagram** (remover GitHub e Twitter).
-- Linha inferior centralizada: "Feito com carinho por HyroCode Desenvolvimento · © 2026"
-
-## 10. Ordem final das seções
-1. Navbar
-2. Hero (mosaico novo)
-3. Nossa Proposta
-4. Portfólio (loop automático, cards menores)
-5. Como Funciona (4 etapas)
-6. Quanto Custa (Pricing)
-7. Footer (logo centralizada + Instagram)
-
----
+## 7. Shine em todos os botões
+Aplicar a classe `.btn-shine` em **todos** os CTAs/botões principais:
+- Navbar "Iniciar projeto" (já tem) — manter
+- Navbar mobile (já tem) — manter
+- Hero "Iniciar um projeto" (já tem) — manter
+- Hero "Ver portfólio" — **adicionar**
+- Pricing "QUERO ESSE" (já tem) — manter
+- Pricing "Entrar em contato" — adicionar
+- Modal "Enviar" e "Fechar" — adicionar
+- Footer (se houver CTA) — adicionar
 
 ## Detalhes técnicos
+- Não tocar em outras seções (Proposta, ComoFunciona) além do necessário.
+- Não mudar tokens do design system; usar utilitários já existentes.
+- Animação do orb 100% CSS (`@keyframes` no `styles.css`): `orb-pulse`, `ring-spin-slow`, `ring-spin-reverse`. Performance ok (transform/opacity).
+- Estados do Brasil em const array dentro do `ContactModal.tsx`.
+- Imagens de portfólio: prompts em português pedindo "realistic browser screenshot of a Brazilian [nicho] website, copy in Brazilian Portuguese, modern design".
 
-**Arquivos a criar:**
-- `src/components/site/Proposta.tsx`
-- `src/components/site/ComoFunciona.tsx` (substitui Process)
-- `src/components/site/Pricing.tsx`
-- 3 imagens hero: `hero-site.jpg`, `hero-dashboard-v2.jpg`, `hero-mobile.jpg`
-- 8 imagens novas de portfólio (sobrescrevem as atuais)
-
-**Arquivos a editar:**
-- `src/components/site/Navbar.tsx` — logo maior
-- `src/components/site/Hero.tsx` — novo mosaico + botão com shine
-- `src/components/site/PortfolioSlider.tsx` — cabeçalho reorganizado, cards menores, novos dados
-- `src/components/site/Footer.tsx` — logo grande, descrição, só Instagram
-- `src/routes/index.tsx` — nova ordem, remover FinalCTA, adicionar Proposta/Pricing
-- `src/styles.css` — utility `.btn-shine` com keyframe
-
-**Arquivos a deletar:**
-- `src/components/site/FinalCTA.tsx`
-- `src/components/site/Process.tsx` (substituído por ComoFunciona)
-
-**Logo:** será reutilizada do arquivo já enviado (`src/assets/hyrocode-logo.png`) — nunca recriada.
+## Arquivos
+- editar: `Navbar.tsx`, `Hero.tsx`, `Footer.tsx`, `PortfolioSlider.tsx`, `Pricing.tsx`, `styles.css`
+- criar: `ContactModal.tsx`
+- regenerar: `p1-analytics.jpg` … `p6-ecom.jpg` (renomear conceitualmente, manter nomes de arquivo para evitar refator)
+- não usar mais: `p7-health.jpg`, `p8-landing.jpg`, `hero-site.jpg`, `hero-dashboard-v2.jpg`, `hero-mobile.jpg` (deixar no disco, só remover imports)
