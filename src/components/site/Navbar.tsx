@@ -3,10 +3,10 @@ import { Menu, X, ArrowRight } from "lucide-react";
 import logo from "@/assets/hyrocode-logo.png";
 
 const links = [
-  { href: "#servicos", label: "Serviços" },
+  { href: "#proposta", label: "Proposta" },
   { href: "#portfolio", label: "Portfólio" },
-  { href: "#processo", label: "Processo" },
-  { href: "#contato", label: "Contato" },
+  { href: "#como-funciona", label: "Como funciona" },
+  { href: "#precos", label: "Preços" },
 ];
 
 export function Navbar() {
@@ -30,18 +30,18 @@ export function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 sm:pt-5">
       <nav
-        className={`flex w-full max-w-6xl items-center justify-between rounded-full px-3 py-2 sm:px-4 sm:py-2.5 transition-all duration-500 ${
+        className={`flex w-full max-w-6xl items-center justify-between rounded-full pl-2 pr-2 py-1.5 sm:pl-3 sm:pr-3 sm:py-1.5 transition-all duration-500 ${
           scrolled
             ? "glass shadow-[var(--shadow-glass)]"
             : "border border-transparent bg-transparent"
         }`}
         aria-label="Principal"
       >
-        <a href="#top" className="flex items-center gap-2 pl-1.5">
+        <a href="#top" className="flex items-center">
           <img
             src={logo}
             alt="HyroCode"
-            className="h-8 w-auto sm:h-9 select-none"
+            className="h-12 w-auto sm:h-14 select-none"
             draggable={false}
           />
         </a>
@@ -61,8 +61,8 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           <a
-            href="#contato"
-            className="hidden md:inline-flex items-center gap-1.5 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-all hover:opacity-90"
+            href="#precos"
+            className="btn-shine hidden md:inline-flex items-center gap-1.5 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-all hover:opacity-90"
           >
             Iniciar projeto
             <ArrowRight className="size-3.5" />
@@ -103,9 +103,9 @@ export function Navbar() {
             ))}
           </ul>
           <a
-            href="#contato"
+            href="#precos"
             onClick={() => setOpen(false)}
-            className="mt-3 flex items-center justify-center gap-1.5 rounded-2xl bg-foreground px-4 py-3 text-sm font-medium text-background"
+            className="btn-shine mt-3 flex items-center justify-center gap-1.5 rounded-2xl bg-foreground px-4 py-3 text-sm font-medium text-background"
           >
             Iniciar projeto
             <ArrowRight className="size-4" />
