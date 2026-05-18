@@ -159,7 +159,7 @@ export function Pricing() {
                   href={p.cta.href}
                   target="_blank"
                   rel="noopener"
-                  className={`btn-shine mt-9 inline-flex items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] ${
+                  className={`btn-shine mt-auto pt-2 inline-flex items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] ${
                     p.highlighted
                       ? "bg-foreground text-background shadow-[var(--shadow-elegant)]"
                       : "glass text-foreground hover:bg-white/[0.06]"
@@ -171,7 +171,7 @@ export function Pricing() {
                 <button
                   type="button"
                   onClick={() => setModalOpen(true)}
-                  className={`btn-shine mt-9 inline-flex items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] ${
+                  className={`btn-shine mt-auto pt-2 inline-flex items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] ${
                     p.highlighted
                       ? "bg-foreground text-background shadow-[var(--shadow-elegant)]"
                       : "glass text-foreground hover:bg-white/[0.06]"
