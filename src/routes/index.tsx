@@ -10,13 +10,13 @@ import { Footer } from "@/components/site/Footer";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "HyroCode — Sites, sistemas e experiências digitais premium" },
+      { title: "HyroCode | Sites, sistemas e experiências digitais premium" },
       {
         name: "description",
         content:
           "Estúdio de produto digital. Projetamos sites premium, plataformas SaaS, sistemas sob medida e interfaces modernas que elevam marcas.",
       },
-      { property: "og:title", content: "HyroCode — Estúdio de produto digital" },
+      { property: "og:title", content: "HyroCode | Estúdio de produto digital" },
       {
         property: "og:description",
         content:

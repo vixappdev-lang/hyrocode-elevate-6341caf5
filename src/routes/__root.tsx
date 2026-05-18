@@ -72,7 +72,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "HyroCode — Estúdio de produto digital" },
+      { title: "HyroCode | Estúdio de produto digital" },
       {
         name: "description",
         content:
@@ -81,8 +81,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "HyroCode" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "HyroCode — Estúdio de produto digital" },
-      { name: "twitter:title", content: "HyroCode — Estúdio de produto digital" },
+      { property: "og:title", content: "HyroCode | Estúdio de produto digital" },
+      { name: "twitter:title", content: "HyroCode | Estúdio de produto digital" },
       { name: "description", content: "HyroCode Digital Studio creates premium, high-level websites for brands." },
       { property: "og:description", content: "HyroCode Digital Studio creates premium, high-level websites for brands." },
       { name: "twitter:description", content: "HyroCode Digital Studio creates premium, high-level websites for brands." },
