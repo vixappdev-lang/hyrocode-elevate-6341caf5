@@ -19,7 +19,6 @@ const PlanSchema = z.object({
 const ButtonsSchema = z.object({
   essencial: PlanSchema,
   pro: PlanSchema,
-  premium: PlanSchema,
 });
 
 export const Route = createFileRoute("/api/public/admin-settings")({
