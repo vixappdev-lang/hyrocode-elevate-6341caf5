@@ -4,9 +4,12 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { CookieBanner } from "@/components/site/CookieBanner";
+import { VisitorTracker } from "@/components/site/VisitorTracker";
 
 import appCss from "../styles.css?url";
 
