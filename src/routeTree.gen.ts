@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminContatosRouteImport } from './routes/admin.contatos'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
 import { Route as ApiPublicAdminLoginRouteImport } from './routes/api/public/admin-login'
 import { Route as ApiPublicAdminContactsRouteImport } from './routes/api/public/admin-contacts'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +49,7 @@ const ApiPublicAdminContactsRoute = ApiPublicAdminContactsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/contatos': typeof AdminContatosRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/contatos': typeof AdminContatosRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/contatos': typeof AdminContatosRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
@@ -67,6 +76,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/sitemap.xml'
     | '/admin/contatos'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
@@ -74,6 +84,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/sitemap.xml'
     | '/admin/contatos'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
@@ -81,6 +92,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/sitemap.xml'
     | '/admin/contatos'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
@@ -89,6 +101,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminContatosRoute: typeof AdminContatosRoute
   ApiPublicAdminContactsRoute: typeof ApiPublicAdminContactsRoute
   ApiPublicAdminLoginRoute: typeof ApiPublicAdminLoginRoute
@@ -97,6 +110,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -137,6 +157,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminContatosRoute: AdminContatosRoute,
   ApiPublicAdminContactsRoute: ApiPublicAdminContactsRoute,
   ApiPublicAdminLoginRoute: ApiPublicAdminLoginRoute,
@@ -145,3 +166,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
