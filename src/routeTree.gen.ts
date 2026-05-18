@@ -10,11 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminContatosRouteImport } from './routes/admin.contatos'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
+import { Route as ApiPublicAdminLoginRouteImport } from './routes/api/public/admin-login'
+import { Route as ApiPublicAdminContactsRouteImport } from './routes/api/public/admin-contacts'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminContatosRoute = AdminContatosRouteImport.update({
+  id: '/admin/contatos',
+  path: '/admin/contatos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicContactRoute = ApiPublicContactRouteImport.update({
@@ -22,30 +30,68 @@ const ApiPublicContactRoute = ApiPublicContactRouteImport.update({
   path: '/api/public/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicAdminLoginRoute = ApiPublicAdminLoginRouteImport.update({
+  id: '/api/public/admin-login',
+  path: '/api/public/admin-login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAdminContactsRoute = ApiPublicAdminContactsRouteImport.update({
+  id: '/api/public/admin-contacts',
+  path: '/api/public/admin-contacts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin/contatos': typeof AdminContatosRoute
+  '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
+  '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
   '/api/public/contact': typeof ApiPublicContactRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin/contatos': typeof AdminContatosRoute
+  '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
+  '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
   '/api/public/contact': typeof ApiPublicContactRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin/contatos': typeof AdminContatosRoute
+  '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
+  '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
   '/api/public/contact': typeof ApiPublicContactRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/public/contact'
+  fullPaths:
+    | '/'
+    | '/admin/contatos'
+    | '/api/public/admin-contacts'
+    | '/api/public/admin-login'
+    | '/api/public/contact'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/contact'
-  id: '__root__' | '/' | '/api/public/contact'
+  to:
+    | '/'
+    | '/admin/contatos'
+    | '/api/public/admin-contacts'
+    | '/api/public/admin-login'
+    | '/api/public/contact'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin/contatos'
+    | '/api/public/admin-contacts'
+    | '/api/public/admin-login'
+    | '/api/public/contact'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminContatosRoute: typeof AdminContatosRoute
+  ApiPublicAdminContactsRoute: typeof ApiPublicAdminContactsRoute
+  ApiPublicAdminLoginRoute: typeof ApiPublicAdminLoginRoute
   ApiPublicContactRoute: typeof ApiPublicContactRoute
 }
 
@@ -58,6 +104,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/contatos': {
+      id: '/admin/contatos'
+      path: '/admin/contatos'
+      fullPath: '/admin/contatos'
+      preLoaderRoute: typeof AdminContatosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/contact': {
       id: '/api/public/contact'
       path: '/api/public/contact'
@@ -65,11 +118,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/admin-login': {
+      id: '/api/public/admin-login'
+      path: '/api/public/admin-login'
+      fullPath: '/api/public/admin-login'
+      preLoaderRoute: typeof ApiPublicAdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/admin-contacts': {
+      id: '/api/public/admin-contacts'
+      path: '/api/public/admin-contacts'
+      fullPath: '/api/public/admin-contacts'
+      preLoaderRoute: typeof ApiPublicAdminContactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminContatosRoute: AdminContatosRoute,
+  ApiPublicAdminContactsRoute: ApiPublicAdminContactsRoute,
+  ApiPublicAdminLoginRoute: ApiPublicAdminLoginRoute,
   ApiPublicContactRoute: ApiPublicContactRoute,
 }
 export const routeTree = rootRouteImport
