@@ -12,7 +12,7 @@ export function VisitorTracker() {
     if (!has) return;
     fetch("/api/public/track", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-hc-consent": "accepted" },
       body: JSON.stringify({
         path,
         referrer: document.referrer || "",
