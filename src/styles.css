@@ -169,4 +169,35 @@
     opacity: 1;
     transform: translateY(0);
   }
+
+  .marquee-track {
+    animation: marquee 50s linear infinite;
+  }
+
+  .btn-shine {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .btn-shine::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      transparent 0%,
+      color-mix(in oklab, white 35%, transparent) 50%,
+      transparent 100%
+    );
+    transform: skewX(-20deg);
+    animation: btn-shine 3.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes btn-shine {
+    0% { left: -150%; }
+    60%, 100% { left: 150%; }
+  }
 }
