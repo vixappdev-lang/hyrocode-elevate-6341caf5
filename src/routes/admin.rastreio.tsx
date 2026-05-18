@@ -1,13 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, lazy, Suspense } from "react";
+import { useEffect, useState } from "react";
 import { TOKEN_KEY } from "./admin";
 import { Smartphone, Monitor, Tablet, Shield, ShieldAlert, Loader2 } from "lucide-react";
+import VisitorMap from "@/components/admin/VisitorMap";
 
 export const Route = createFileRoute("/admin/rastreio")({
   component: RastreioPage,
 });
-
-const VisitorMap = lazy(() => import("@/components/admin/VisitorMap"));
 
 type Visitor = {
   id: string;
