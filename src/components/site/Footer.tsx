@@ -40,8 +40,9 @@ export function Footer() {
               decoding="async"
             />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Estúdio digital especializado em sites premium, sistemas web e
-              experiências de alta conversão.
+              HYROCODE cria soluções personalizadas, modernas e funcionais
+              para destacar seu negócio online. Transformamos sua ideia em
+              sucesso digital!
             </p>
             <div className="mt-6 flex items-center gap-2">
               <a
