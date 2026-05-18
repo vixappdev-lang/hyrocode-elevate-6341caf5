@@ -202,15 +202,7 @@
   }
 }
 
-@keyframes orb-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-@keyframes orb-spin-reverse {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
-}
-@keyframes orb-pulse {
-  0%, 100% { transform: scale(1); opacity: 0.85; }
-  50% { transform: scale(1.06); opacity: 1; }
+@keyframes float-y {
+  0%, 100% { transform: translateY(-6px); }
+  50% { transform: translateY(8px); }
 }

@@ -34,37 +34,48 @@ export function PortfolioSlider() {
         <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-gradient sm:text-4xl lg:text-5xl">
           Projetos reais entregues.
         </h2>
-        <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Confira alguns dos últimos projetos desenvolvidos pela HyroCode —
-          sites pensados para vender, agendar e gerar autoridade para o seu negócio.
+        <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
+          Confira alguns dos últimos projetos desenvolvidos pela HyroCode.
+          Sites pensados para vender, agendar e gerar autoridade para o seu negócio.
         </p>
       </div>
 
-      <div className="relative mt-14 overflow-hidden">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-background to-transparent sm:w-32" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-background to-transparent sm:w-32" />
+      <div className="relative mt-16 overflow-hidden">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-background to-transparent sm:w-40" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-background to-transparent sm:w-40" />
 
-        <div className="flex w-max gap-4 sm:gap-5 marquee-track">
+        <div className="flex w-max gap-6 sm:gap-8 marquee-track">
           {loop.map((p, i) => (
             <article
               key={`${p.name}-${i}`}
-              className="group/card relative h-[280px] w-[210px] shrink-0 overflow-hidden rounded-2xl border border-white/[0.06] bg-card shadow-[var(--shadow-card)] transition-all duration-500 hover:-translate-y-1 hover:border-white/15 sm:h-[340px] sm:w-[260px]"
+              className="group/card relative h-[300px] w-[380px] shrink-0 overflow-hidden rounded-3xl transition-all duration-500 hover:-translate-y-1 sm:h-[360px] sm:w-[500px]"
             >
               <img
                 src={p.img}
-                alt={`${p.name} — ${p.category}`}
-                width={1024}
-                height={1536}
+                alt={`${p.name}, ${p.category}`}
+                width={1280}
+                height={896}
                 loading="lazy"
-                className="absolute inset-0 size-full object-cover object-top transition-transform duration-[1.4s] ease-out group-hover/card:scale-[1.04]"
+                className="absolute inset-0 size-full object-cover object-center transition-transform duration-[1.4s] ease-out group-hover/card:scale-[1.03]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+              {/* Soft bottom gradient for legibility */}
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
 
-              <div className="absolute inset-x-0 bottom-0 p-4">
-                <div className="text-[10px] font-medium uppercase tracking-wider text-primary-glow">
+              {/* Glow halo on hover */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover/card:opacity-100"
+                style={{
+                  background:
+                    "radial-gradient(60% 50% at 50% 50%, color-mix(in oklab, var(--primary) 22%, transparent), transparent 70%)",
+                }}
+              />
+
+              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-primary-glow">
                   {p.category}
                 </div>
-                <h3 className="mt-1 font-display text-base font-semibold text-foreground">
+                <h3 className="mt-1.5 font-display text-lg font-semibold text-foreground sm:text-xl">
                   {p.name}
                 </h3>
               </div>

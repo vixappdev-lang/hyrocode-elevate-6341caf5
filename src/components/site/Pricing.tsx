@@ -95,23 +95,26 @@ export function Pricing() {
           {plans.map((p) => (
             <div
               key={p.name}
-              className={`relative flex flex-col rounded-3xl border p-8 sm:p-10 transition-all duration-500 ${
+              className={`group relative flex flex-col rounded-3xl border border-white/[0.08] bg-card/50 p-8 sm:p-10 transition-all duration-500 hover:-translate-y-1 hover:border-white/20 ${
                 p.highlighted
-                  ? "border-transparent bg-card shadow-[var(--shadow-elegant)]"
-                  : "border-white/[0.08] bg-card/50 hover:border-white/15"
+                  ? "bg-card shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elegant)]"
+                  : ""
               }`}
-              style={
-                p.highlighted
-                  ? {
-                      backgroundImage:
-                        "linear-gradient(var(--card), var(--card)), var(--gradient-primary)",
-                      backgroundOrigin: "border-box",
-                      backgroundClip: "padding-box, border-box",
-                      border: "1.5px solid transparent",
-                    }
-                  : undefined
-              }
             >
+              {p.highlighted && (
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-60"
+                  style={{
+                    background: "var(--gradient-primary)",
+                    WebkitMask:
+                      "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+                    WebkitMaskComposite: "xor",
+                    maskComposite: "exclude",
+                    padding: "1.5px",
+                  }}
+                />
+              )}
               {p.badge && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span className="inline-flex items-center gap-1 rounded-full bg-foreground px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-background">

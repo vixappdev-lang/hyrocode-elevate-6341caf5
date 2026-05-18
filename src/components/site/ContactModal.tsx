@@ -7,11 +7,42 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-const ESTADOS = [
-  "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA",
-  "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
-  "RS", "RO", "RR", "SC", "SP", "SE", "TO",
+const ESTADOS: { uf: string; nome: string }[] = [
+  { uf: "AC", nome: "Acre" },
+  { uf: "AL", nome: "Alagoas" },
+  { uf: "AP", nome: "Amapá" },
+  { uf: "AM", nome: "Amazonas" },
+  { uf: "BA", nome: "Bahia" },
+  { uf: "CE", nome: "Ceará" },
+  { uf: "DF", nome: "Distrito Federal" },
+  { uf: "ES", nome: "Espírito Santo" },
+  { uf: "GO", nome: "Goiás" },
+  { uf: "MA", nome: "Maranhão" },
+  { uf: "MT", nome: "Mato Grosso" },
+  { uf: "MS", nome: "Mato Grosso do Sul" },
+  { uf: "MG", nome: "Minas Gerais" },
+  { uf: "PA", nome: "Pará" },
+  { uf: "PB", nome: "Paraíba" },
+  { uf: "PR", nome: "Paraná" },
+  { uf: "PE", nome: "Pernambuco" },
+  { uf: "PI", nome: "Piauí" },
+  { uf: "RJ", nome: "Rio de Janeiro" },
+  { uf: "RN", nome: "Rio Grande do Norte" },
+  { uf: "RS", nome: "Rio Grande do Sul" },
+  { uf: "RO", nome: "Rondônia" },
+  { uf: "RR", nome: "Roraima" },
+  { uf: "SC", nome: "Santa Catarina" },
+  { uf: "SP", nome: "São Paulo" },
+  { uf: "SE", nome: "Sergipe" },
+  { uf: "TO", nome: "Tocantins" },
 ];
 
 type Props = {
@@ -77,19 +108,25 @@ export function ContactModal({ open, onOpenChange }: Props) {
                   <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                     Estado *
                   </label>
-                  <select
-                    required
+                  <Select
                     value={form.estado}
-                    onChange={(e) => setForm({ ...form, estado: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-background/60 px-3 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-primary/60"
+                    onValueChange={(v) => setForm({ ...form, estado: v })}
                   >
-                    <option value="">Selecione</option>
-                    {ESTADOS.map((uf) => (
-                      <option key={uf} value={uf} className="bg-background text-foreground">
-                        {uf}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="w-full rounded-xl border-white/10 bg-background/60 px-4 py-5 text-sm text-foreground transition-colors focus:border-primary/60 focus:ring-0">
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-72 rounded-xl border-white/10 bg-popover">
+                      {ESTADOS.map((e) => (
+                        <SelectItem
+                          key={e.uf}
+                          value={e.uf}
+                          className="rounded-lg text-sm focus:bg-white/[0.06]"
+                        >
+                          {e.nome} ({e.uf})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">

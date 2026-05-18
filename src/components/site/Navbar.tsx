@@ -37,11 +37,11 @@ export function Navbar() {
         }`}
         aria-label="Principal"
       >
-        <a href="#top" className="flex items-center -my-2">
+        <a href="#top" className="flex items-center -my-4">
           <img
             src={logo}
             alt="HyroCode"
-            className="h-20 w-auto sm:h-24 select-none"
+            className="h-28 w-auto sm:h-32 select-none"
             draggable={false}
           />
         </a>
