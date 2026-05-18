@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { CookieBanner } from "@/components/site/CookieBanner";
 import { VisitorTracker } from "@/components/site/VisitorTracker";
+import { AntiInspectGuard } from "@/components/site/AntiInspectGuard";
 
 import appCss from "../styles.css?url";
 
@@ -160,6 +161,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
+      <AntiInspectGuard />
       {!isAdmin && <CookieBanner />}
       {!isAdmin && <VisitorTracker />}
     </QueryClientProvider>
