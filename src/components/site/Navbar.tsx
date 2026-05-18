@@ -48,12 +48,12 @@ export function Navbar() {
           />
         </a>
 
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="hidden items-center gap-2 lg:flex">
           {links.map((l) => (
             <li key={l.href}>
               <a
                 href={l.href}
-                className="rounded-full px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                className="rounded-full px-3 py-2 text-sm whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground"
               >
                 {l.label}
               </a>
@@ -64,7 +64,7 @@ export function Navbar() {
         <div className="flex items-center gap-2">
           <a
             href="#precos"
-            className="btn-shine hidden md:inline-flex items-center gap-1.5 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-all hover:opacity-90"
+            className="btn-shine hidden lg:inline-flex items-center gap-1.5 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background whitespace-nowrap transition-all hover:opacity-90"
           >
             Iniciar projeto
             <ArrowRight className="size-3.5" />
@@ -73,7 +73,7 @@ export function Navbar() {
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-label="Abrir menu"
-            className="inline-flex md:hidden size-10 items-center justify-center rounded-full glass"
+            className="inline-flex lg:hidden size-10 items-center justify-center rounded-full glass"
           >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>

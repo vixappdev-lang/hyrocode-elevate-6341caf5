@@ -1,80 +1,58 @@
-## 1. Logo realmente maior (sem esticar, sem extender)
+## 1. Erro do build na Vercel — diagnóstico honesto
 
-A causa raiz já foi confirmada: o PNG `src/assets/hyrocode-logo.png` tem **enorme padding transparente em cima e embaixo** (a marca ocupa só ~40% da altura da imagem). Por isso aumentar `h-*` no CSS dá pouco efeito — só aumenta o "ar".
+O erro `No Output Directory named "public" found` acontece porque **o projeto não é compilado para a Vercel**. O build atual usa `@lovable.dev/vite-tanstack-config`, que internamente acopla o `@cloudflare/vite-plugin` e gera saída no formato **Cloudflare Workers** (`.output/server/...` + assets), não o formato estático/SSR da Vercel (`.vercel/output` ou `public/`).
 
-**Solução:** gerar uma versão cropada do PNG (trim do alpha) e usá-la nos componentes.
+O `vercel.json` que existe hoje apontando `outputDirectory: ".output/public"` **não resolve** — essa pasta nunca é produzida porque o preset da TanStack Start está fixado em Cloudflare pelo wrapper da Lovable. Não dá pra simplesmente trocar o preset para `vercel` sem quebrar o preview da Lovable (que depende do plugin Cloudflare + `wrangler.jsonc` + `src/server.ts`).
 
-- Rodar `sharp` localmente para fazer `trim()` no PNG → salvar como `src/assets/hyrocode-logo-trim.png` (mantém proporção real do símbolo + texto, sem redesenhar nada, mesmas cores, mesma arte).
-- Trocar o import em `Navbar.tsx` e `Footer.tsx` para o arquivo cropado.
-- Reduzir levemente as classes (`h-10 sm:h-12` na navbar, `h-12 md:h-14` no footer) — como o PNG agora é "puro logo", a marca aparecerá **visivelmente ~50–60% maior** sem ocupar mais espaço de layout e sem distorcer nada.
+### Caminho recomendado (o que realmente funciona)
 
-Nenhum outro componente é tocado.
+**Publicar o site pela própria Lovable e apontar o domínio `hyrocode.online` para a Lovable, não para a Vercel.** A infra da Lovable já roda o build correto (Cloudflare Workers na borda), entrega SSR, sitemap dinâmico, rotas `/api/public/*`, e suporta domínio customizado nativamente. Performance é equivalente ou superior à Vercel para esse stack, sem nenhuma reconfiguração.
 
-## 2. Seções "somem" — bug do reveal on scroll
+Passos (você faz pelo painel, eu não preciso mexer em código):
+1. Clicar em **Publish** no topo direito do editor.
+2. **Project Settings → Domains → Add custom domain** → `hyrocode.online`.
+3. Atualizar os registros DNS no provedor do domínio conforme as instruções mostradas (vai pedir um CNAME / A record apontando pra Lovable em vez da Vercel).
+4. Remover o projeto da Vercel (ou deixar parado — não vai mais receber tráfego).
 
-O `useReveal` aplica `opacity: 0` via `.reveal` e só adiciona `.is-visible` quando o `IntersectionObserver` dispara. Em alguns casos (scroll rápido, refresh no meio da página, navegação por âncora) o elemento já está visível antes do observer montar → fica invisível para sempre.
+Resultado: site no ar em `hyrocode.online`, com todo o SEO, sitemap, robots e JSON-LD que já estão configurados, **sem o erro de build**.
 
-**Correção em `src/hooks/use-reveal.ts`:**
-- Checar imediatamente no mount se o elemento já está dentro do viewport (`getBoundingClientRect`) e marcar visível direto.
-- Como fallback, garantir `.is-visible` se `prefers-reduced-motion` estiver ativo.
-- Adicionar em `styles.css` um fallback `@media (prefers-reduced-motion: reduce) .reveal { opacity: 1; transform: none; }`.
+### Limpeza no repositório
 
-Isso elimina o "sumiço" de Proposta / Valores / Portfólio / Pricing.
+- **Remover `vercel.json`** — está enganando, dá a impressão que o projeto suporta Vercel quando não suporta.
+- Manter `wrangler.jsonc`, `src/server.ts` e o resto intacto.
 
-## 3. Performance geral
+### Por que não "forçar Vercel"?
 
-- Adicionar `loading="lazy"` e `decoding="async"` em imagens não-críticas (PortfolioSlider, cards).
-- Adicionar `fetchpriority="high"` + preload no logo da navbar (LCP candidato).
-- Trocar listeners de scroll para usar `requestAnimationFrame` com flag (Navbar já é `passive`, ok).
-- Garantir que `ContactModal` faça import dinâmico (`React.lazy`) — só carrega quando o usuário clica em "Iniciar projeto".
-- Revisar animações pesadas em `Hero` (se houver float infinito) para usar `will-change` corretamente.
+Para rodar de verdade na Vercel seria necessário:
+- Trocar `@lovable.dev/vite-tanstack-config` por config manual da TanStack Start com preset `vercel`.
+- Reescrever `src/server.ts` (hoje é wrapper Cloudflare-specific).
+- Remover `@cloudflare/vite-plugin` e `wrangler.jsonc`.
+- Perder o preview da Lovable (o editor não sabe rodar o preset Vercel).
 
-## 4. Scrollbar transparente
+Ou seja: você ganharia Vercel e **perderia o ambiente de desenvolvimento da Lovable**. Não é uma troca boa. Por isso a recomendação é publicar pela Lovable com domínio customizado.
 
-Em `src/styles.css`:
+---
 
-```css
-html { scrollbar-width: thin; scrollbar-color: transparent transparent; }
-html:hover { scrollbar-color: color-mix(in oklab, white 12%, transparent) transparent; }
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: transparent; border-radius: 999px; transition: background .25s; }
-html:hover ::-webkit-scrollbar-thumb { background: color-mix(in oklab, white 10%, transparent); }
-```
+## 2. Menu da Navbar muito estreito
 
-Resultado: barra invisível em repouso, aparece sutilmente ao interagir.
+Olhando o `Navbar.tsx` atual: no breakpoint `md` (768px–1024px) já aparecem **logo + 4 links + botão "Iniciar projeto"** dentro de uma pílula `max-w-6xl` com `gap-1` entre links e `px-4` em cada. Em viewports apertados o conteúdo fica espremido contra a logo e o botão.
 
-## 5. Google SEO — resposta final
+### Correção (cirúrgica, sem mexer em design)
 
-**Pergunta:** "consegue fazer integração 100% com Google SEO pra meu site aparecer no topo com precisão máxima?"
+Em `src/components/site/Navbar.tsx`:
+- Subir o breakpoint do menu desktop de `md:flex` para `lg:flex` (mostrar links só a partir de 1024px, abaixo disso usa o menu mobile que já existe e funciona bem).
+- Mesma coisa no botão "Iniciar projeto": `md:inline-flex` → `lg:inline-flex`.
+- No botão hamburguer: `md:hidden` → `lg:hidden`.
+- Adicionar `gap-2` no `<ul>` em vez de `gap-1` e reduzir `px-4` dos links para `px-3` — fica respirado sem aumentar a largura total.
+- Adicionar `whitespace-nowrap` nos links para garantir que nunca quebrem linha.
 
-**Resposta honesta:**
-
-Posso configurar **toda a parte técnica** que o Google espera (isso eu garanto 100%):
-
-- `<title>` e `meta description` únicos por rota.
-- Open Graph + Twitter Card.
-- JSON-LD (Organization, WebSite, Service).
-- `sitemap.xml` dinâmico (rota TanStack) + `robots.txt`.
-- Canonical, lang, viewport, charset corretos.
-- Verificação no **Google Search Console** via meta tag (posso fazer end-to-end pelo conector já disponível — gero o token, injeto a tag, chamo verify e cadastro o domínio).
-- Envio do sitemap ao GSC.
-
-**O que NÃO existe (e ninguém entrega de verdade):** garantia de "topo do Google". Ranking depende de autoridade do domínio, backlinks, idade, concorrência ("criar site" é altíssima competição — grandes players gastam milhões). O que posso fazer é deixar você **tecnicamente perfeito e indexável** e mirar keywords realistas ("desenvolvimento de sites premium [cidade]", "criação de SaaS sob medida", etc.), o que pode trazer resultado real em semanas/meses.
-
-Se aprovar o plano, na implementação eu já incluo SEO técnico + verificação no Search Console.
+Resultado: em telas médias o usuário vê logo + botão + hamburguer (limpo, sem aperto). A partir de 1024px o menu completo aparece com espaçamento confortável. Identidade visual, cores, glass, logo — nada muda.
 
 ---
 
 ## Arquivos afetados
 
-- `src/assets/hyrocode-logo-trim.png` (novo, gerado por script)
-- `src/components/site/Navbar.tsx` (import + classes)
-- `src/components/site/Footer.tsx` (import + classes)
-- `src/hooks/use-reveal.ts` (fix observer)
-- `src/styles.css` (scrollbar + reduced-motion)
-- `src/components/site/ContactModal.tsx` import → lazy em `Pricing.tsx` / `Hero.tsx`
-- `src/routes/__root.tsx` (preload do logo, meta verification se aprovado)
-- (Opcional, na fase SEO) `src/routes/sitemap[.]xml.ts`, `public/robots.txt`
+- `vercel.json` — deletar
+- `src/components/site/Navbar.tsx` — ajuste de breakpoints e espaçamento (≈6 linhas)
 
-Sem mexer em cores, navbar layout, identidade visual, hero, pricing, valores ou qualquer estrutura existente.
+Nenhum outro arquivo é tocado. Hero, Pricing, Footer, SEO, sitemap, rotas admin — tudo permanece.
