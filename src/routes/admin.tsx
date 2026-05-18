@@ -126,7 +126,7 @@ function DockInner({ path, onLogout }: { path: string; onLogout: () => void }) {
             className={`group relative grid size-11 place-items-center rounded-xl transition ${
               isActive
                 ? "bg-foreground text-background"
-                : "text-muted-foreground hover:bg-foreground/8 hover:text-foreground"
+                : "text-muted-foreground hover:bg-foreground/[0.08] hover:text-foreground"
             }`}
           >
             <Icon className="size-[18px]" strokeWidth={1.7} />
@@ -146,7 +146,7 @@ function DockInner({ path, onLogout }: { path: string; onLogout: () => void }) {
         onClick={onLogout}
         title="Sair"
         aria-label="Sair"
-        className="grid size-11 place-items-center rounded-xl text-muted-foreground transition hover:bg-foreground/8 hover:text-foreground"
+        className="grid size-11 place-items-center rounded-xl text-muted-foreground transition hover:bg-foreground/[0.08] hover:text-foreground"
       >
         <LogOut className="size-[18px]" strokeWidth={1.7} />
       </button>
