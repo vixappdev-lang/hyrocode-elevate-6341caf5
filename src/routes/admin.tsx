@@ -6,11 +6,9 @@ import {
   Inbox,
   Settings,
   LogOut,
-  Search,
   Lock,
   Loader2,
 } from "lucide-react";
-import logo from "@/assets/hyrocode-logo-trim.png";
 
 export const TOKEN_KEY = "hyro_admin_token";
 
@@ -42,7 +40,6 @@ function AdminLayout() {
     setHydrated(true);
   }, []);
 
-  // Redirect /admin -> /admin/dashboard
   useEffect(() => {
     if (hydrated && token && path === "/admin") {
       navigate({ to: "/admin/dashboard", replace: true });
@@ -78,96 +75,90 @@ function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Topbar */}
-      <header className="fixed inset-x-0 top-0 z-40 h-12 border-b border-white/[0.06] bg-background/80 backdrop-blur-xl">
-        <div className="flex h-full items-center justify-between gap-3 px-4">
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-1.5 pl-1 pr-2">
-              <span className="size-3 rounded-full bg-[#ff5f57]" />
-              <span className="size-3 rounded-full bg-[#febc2e]" />
-              <span className="size-3 rounded-full bg-[#28c840]" />
-            </div>
-            <div className="h-5 w-px bg-white/10 hidden sm:block" />
-            <span className="text-xs uppercase tracking-[0.18em] text-muted-foreground">HyroCode</span>
+      {/* Top bar — sem traffic lights */}
+      <header className="fixed inset-x-0 top-0 z-30 h-14 border-b border-white/[0.05] bg-background/70 backdrop-blur-xl">
+        <div className="flex h-full items-center justify-between gap-3 px-5">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">HyroCode</span>
             <span className="text-xs text-muted-foreground/40">/</span>
             <span className="text-sm font-medium text-foreground">{pageTitle}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="hidden md:flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.02] px-3 py-1.5 text-xs text-muted-foreground">
-              <Search className="size-3.5" />
-              <span>Buscar</span>
-              <kbd className="ml-2 rounded border border-white/10 bg-white/5 px-1.5 text-[10px]">⌘K</kbd>
-            </div>
-            <button
-              onClick={onLogout}
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:border-white/20"
-            >
-              <LogOut className="size-3.5" />
-              <span className="hidden sm:inline">Sair</span>
-            </button>
           </div>
         </div>
       </header>
 
-      {/* Sidebar */}
-      <aside className="fixed left-0 top-12 bottom-0 z-30 hidden lg:flex w-[240px] flex-col border-r border-white/[0.06] bg-card/40 backdrop-blur-xl">
-        <div className="flex items-center gap-2 px-4 py-4">
-          <img src={logo} alt="HyroCode" className="h-7 w-auto" draggable={false} />
-        </div>
-        <nav className="flex-1 px-2 py-2">
-          <ul className="space-y-0.5">
-            {items.map((item) => {
-              const isActive = path.startsWith(item.to);
-              const Icon = item.icon;
-              return (
-                <li key={item.to}>
-                  <Link
-                    to={item.to}
-                    className={`flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm transition-colors ${
-                      isActive
-                        ? "bg-white/[0.06] text-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-white/[0.03]"
-                    }`}
-                  >
-                    <Icon className="size-4" />
-                    {item.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-        <div className="border-t border-white/[0.06] px-4 py-3">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/60">v1.0 · Painel</p>
-        </div>
-      </aside>
-
-      {/* Mobile tab bar */}
-      <nav className="fixed inset-x-0 bottom-0 z-30 flex lg:hidden border-t border-white/[0.06] bg-card/80 backdrop-blur-xl">
-        {items.map((item) => {
-          const isActive = path.startsWith(item.to);
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.to}
-              to={item.to}
-              className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-[10px] ${
-                isActive ? "text-foreground" : "text-muted-foreground"
-              }`}
-            >
-              <Icon className="size-4" />
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
+      {/* Dock glass — fixo no topo (PC) e no rodapé (celular) — mesmo design */}
+      <DockMenu path={path} onLogout={onLogout} />
 
       {/* Content */}
-      <main className="pt-12 lg:pl-[240px] pb-16 lg:pb-0 min-h-screen">
-        <div className="px-5 py-6 sm:px-8 sm:py-8">
+      <main className="pt-20 pb-28 min-h-screen">
+        <div className="px-4 sm:px-6 lg:px-8">
           <Outlet />
         </div>
       </main>
+    </div>
+  );
+}
+
+function DockMenu({ path, onLogout }: { path: string; onLogout: () => void }) {
+  return (
+    <>
+      {/* Desktop: top centered */}
+      <div className="fixed left-1/2 top-3 z-40 hidden -translate-x-1/2 lg:block">
+        <DockInner path={path} onLogout={onLogout} />
+      </div>
+      {/* Mobile: bottom centered */}
+      <div className="fixed left-1/2 bottom-4 z-40 -translate-x-1/2 lg:hidden">
+        <DockInner path={path} onLogout={onLogout} />
+      </div>
+    </>
+  );
+}
+
+function DockInner({ path, onLogout }: { path: string; onLogout: () => void }) {
+  return (
+    <div
+      className="flex items-center gap-1 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-1.5 backdrop-blur-2xl"
+      style={{
+        boxShadow:
+          "0 10px 40px -10px rgba(0,0,0,.6), inset 0 1px 0 0 rgba(255,255,255,0.06)",
+      }}
+    >
+      {items.map((item) => {
+        const isActive = path.startsWith(item.to);
+        const Icon = item.icon;
+        return (
+          <Link
+            key={item.to}
+            to={item.to}
+            title={item.label}
+            aria-label={item.label}
+            className={`group relative grid size-11 place-items-center rounded-xl transition ${
+              isActive
+                ? "bg-primary text-primary-foreground shadow-[0_6px_20px_-6px_hsl(var(--primary)/0.6)]"
+                : "text-muted-foreground hover:text-foreground hover:bg-white/[0.06]"
+            }`}
+          >
+            <Icon className="size-[18px]" strokeWidth={1.7} />
+            {/* tooltip */}
+            <span
+              className={`pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md border border-white/10 bg-background/95 px-2 py-1 text-[10px] text-foreground opacity-0 shadow transition group-hover:opacity-100 lg:top-full lg:mt-2 ${
+                "max-lg:bottom-full max-lg:mb-2"
+              }`}
+            >
+              {item.label}
+            </span>
+          </Link>
+        );
+      })}
+      <span className="mx-1 h-7 w-px bg-white/[0.08]" />
+      <button
+        onClick={onLogout}
+        title="Sair"
+        aria-label="Sair"
+        className="grid size-11 place-items-center rounded-xl text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
+      >
+        <LogOut className="size-[18px]" strokeWidth={1.7} />
+      </button>
     </div>
   );
 }

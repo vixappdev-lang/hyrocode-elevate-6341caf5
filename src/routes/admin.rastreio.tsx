@@ -1,13 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, lazy, Suspense } from "react";
+import { useEffect, useState } from "react";
 import { TOKEN_KEY } from "./admin";
 import { Smartphone, Monitor, Tablet, Shield, ShieldAlert, Loader2 } from "lucide-react";
+import VisitorMap from "@/components/admin/VisitorMap";
 
 export const Route = createFileRoute("/admin/rastreio")({
   component: RastreioPage,
 });
-
-const VisitorMap = lazy(() => import("@/components/admin/VisitorMap"));
 
 type Visitor = {
   id: string;
@@ -72,9 +71,7 @@ function RastreioPage() {
               <Loader2 className="size-5 animate-spin" />
             </div>
           ) : (
-            <Suspense fallback={<div className="absolute inset-0 grid place-items-center"><Loader2 className="size-5 animate-spin" /></div>}>
-              <VisitorMap visitors={withCoords} />
-            </Suspense>
+            <VisitorMap visitors={withCoords} />
           )}
         </div>
 
