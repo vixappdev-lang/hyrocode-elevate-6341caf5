@@ -4,13 +4,9 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
-  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { CookieBanner } from "@/components/site/CookieBanner";
-import { VisitorTracker } from "@/components/site/VisitorTracker";
-import { AntiInspectGuard } from "@/components/site/AntiInspectGuard";
 
 import appCss from "../styles.css?url";
 
@@ -76,7 +72,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "HyroCode | Estúdio de produto digital" },
+      { title: "HyroCode | Sistemas digital" },
       {
         name: "description",
         content:
@@ -85,13 +81,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "HyroCode" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "HyroCode | Estúdio de produto digital" },
-      { name: "twitter:title", content: "HyroCode | Estúdio de produto digital" },
-      { name: "description", content: "HyroCode Digital Studio creates premium, high-level websites for brands." },
-      { property: "og:description", content: "HyroCode Digital Studio creates premium, high-level websites for brands." },
-      { name: "twitter:description", content: "HyroCode Digital Studio creates premium, high-level websites for brands." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/355e4108-e514-489f-b6d0-65206ef7d7ce/id-preview-cd92e42c--425fa925-7dc6-45c7-a96e-6e4790911994.lovable.app-1779091000984.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/355e4108-e514-489f-b6d0-65206ef7d7ce/id-preview-cd92e42c--425fa925-7dc6-45c7-a96e-6e4790911994.lovable.app-1779091000984.png" },
+      { property: "og:title", content: "HyroCode | Sistemas digital" },
+      { name: "twitter:title", content: "HyroCode | Sistemas digital" },
+      { name: "description", content: "HyroCode - Soluções digitais para empresas" },
+      { property: "og:description", content: "HyroCode - Soluções digitais para empresas" },
+      { name: "twitter:description", content: "HyroCode - Soluções digitais para empresas" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/5wz0PRKx06bTGHTlSFcAWZ4xhd12/social-images/social-1779141516270-hyrocode.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/5wz0PRKx06bTGHTlSFcAWZ4xhd12/social-images/social-1779141516270-hyrocode.webp" },
     ],
     links: [
       { rel: "canonical", href: "https://hyrocode.online/" },
@@ -111,24 +107,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "Organization",
           name: "HyroCode",
           url: "https://hyrocode.online",
-          logo: "https://hyrocode.online/favicon.png",
           description:
             "Estúdio digital especializado em sites premium, sistemas web, SaaS e experiências de alta conversão.",
           sameAs: ["https://instagram.com/hyrocode"],
-        }),
-      },
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "HyroCode",
-          url: "https://hyrocode.online",
-          potentialAction: {
-            "@type": "SearchAction",
-            target: "https://hyrocode.online/?q={search_term_string}",
-            "query-input": "required name=search_term_string",
-          },
         }),
       },
     ],
@@ -141,7 +122,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="en">
       <head>
         <HeadContent />
       </head>
@@ -155,15 +136,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const path = useRouterState({ select: (s) => s.location.pathname });
-  const isAdmin = path.startsWith("/admin");
 
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
-      <AntiInspectGuard />
-      {!isAdmin && <CookieBanner />}
-      {!isAdmin && <VisitorTracker />}
     </QueryClientProvider>
   );
 }
