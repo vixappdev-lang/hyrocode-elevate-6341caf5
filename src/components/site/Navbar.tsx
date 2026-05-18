@@ -30,7 +30,7 @@ export function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 sm:pt-5">
       <nav
-        className={`flex w-full max-w-6xl items-center justify-between rounded-full pl-3 pr-2 py-1 sm:pl-4 sm:pr-3 sm:py-1 transition-all duration-500 ${
+        className={`flex w-full max-w-[1200px] items-center justify-between rounded-full pl-3 pr-2 py-1 sm:pl-4 sm:pr-3 sm:py-1 transition-all duration-500 ${
           scrolled
             ? "glass shadow-[var(--shadow-glass)]"
             : "border border-transparent bg-transparent"
@@ -82,7 +82,7 @@ export function Navbar() {
 
       {/* Mobile menu */}
       <div
-        className={`fixed inset-0 top-0 z-40 md:hidden transition-opacity duration-300 ${
+        className={`fixed inset-0 top-0 z-40 lg:hidden transition-opacity duration-300 ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
