@@ -47,7 +47,7 @@ export default function VisitorMap({ visitors }: { visitors: Visitor[] }) {
       await import("leaflet/dist/leaflet.css");
       if (disposed || !containerRef.current) return;
 
-      const L = leaflet.default ?? leaflet;
+      const L = leaflet;
       const map = L.map(containerRef.current, {
         center: [-14.2, -51.9],
         zoom: 3,
@@ -100,7 +100,7 @@ export default function VisitorMap({ visitors }: { visitors: Visitor[] }) {
 
       const leaflet = await import("leaflet");
       if (disposed) return;
-      const L = leaflet.default ?? leaflet;
+      const L = leaflet;
       layer.clearLayers();
 
       const bounds: [number, number][] = [];
@@ -168,7 +168,15 @@ export default function VisitorMap({ visitors }: { visitors: Visitor[] }) {
         .visitor-marker-alert::before { border-color: oklch(0.78 0.15 78); }
       `}</style>
       <div ref={containerRef} className="absolute inset-0" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-[400] opacity-[0.13] [background-image:linear-gradient(color-mix(in_oklab,var(--primary-glow)_42%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_oklab,var(--primary-glow)_42%,transparent)_1px,transparent_1px)] [background-size:54px_54px]" />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-[400] opacity-[0.13]"
+        style={{
+          backgroundImage:
+            "linear-gradient(color-mix(in oklab, var(--primary-glow) 42%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in oklab, var(--primary-glow) 42%, transparent) 1px, transparent 1px)",
+          backgroundSize: "54px 54px",
+        }}
+      />
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 z-[401] h-1/2 bg-gradient-to-b from-primary/10 to-transparent" />
       <div
         aria-hidden
