@@ -45,7 +45,7 @@ const plans: Plan[] = [
   },
   {
     name: "Sistemas & Painéis Sob Medida",
-    badge: "Mais escolhido",
+    badge: "Recomendado",
     price: "Valor a consultar",
     priceSuffix: null,
     installments: null,

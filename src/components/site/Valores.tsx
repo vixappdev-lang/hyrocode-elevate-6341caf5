@@ -11,7 +11,7 @@ const cards = [
   {
     eyebrow: "Nossa missão",
     title: "Uma parceria pensando no longo prazo.",
-    text: "Priorizamos o suporte ao cliente para garantir uma experiência que só a HyroCode entrega — antes, durante e depois do lançamento.",
+    text: "Priorizamos o suporte ao cliente para garantir uma experiência única antes, durante e depois do lançamento.",
   },
 ];
 
@@ -25,40 +25,34 @@ export function Valores() {
         className="reveal mx-auto grid max-w-7xl gap-5 px-6 lg:grid-cols-3 lg:gap-6"
       >
         {/* Card grande — Nossos Valores */}
-        <article className="group relative overflow-hidden rounded-3xl border border-white/[0.06] bg-card shadow-[var(--shadow-card)] lg:col-span-2 lg:min-h-[460px]">
+        <article className="group relative overflow-hidden rounded-3xl border border-white/[0.07] bg-card shadow-[var(--shadow-card)] lg:col-span-2 lg:min-h-[460px]">
           <img
             src={valoresImg}
             alt="Workspace da HyroCode"
             width={1280}
             height={896}
             loading="lazy"
-            className="absolute inset-0 size-full object-cover opacity-70 transition-transform duration-[1.4s] ease-out group-hover:scale-[1.04]"
+            className="absolute inset-0 size-full object-cover opacity-55 transition-transform duration-[1.4s] ease-out group-hover:scale-[1.04]"
           />
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-background via-background/85 to-background/35" />
-          {/* Decoração: bolinha azul no canto superior direito */}
-          <div
-            aria-hidden
-            className="absolute right-6 top-6 size-14 rounded-full opacity-90 blur-[1px]"
-            style={{ background: "var(--gradient-primary)" }}
-          />
+          <div className="absolute inset-0 bg-gradient-to-tr from-background via-background/92 to-background/55" />
 
           <div className="relative flex h-full min-h-[380px] flex-col justify-end p-7 sm:p-10 lg:p-12">
-            <span className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
-              Nossos valores
-            </span>
-            <h3 className="mt-4 max-w-xl font-display text-2xl font-semibold leading-tight text-foreground sm:text-3xl lg:text-[34px]">
-              Designs inteligentes, resultados precisos — escolha a HyroCode
-              para excelência digital.
+            <div className="flex items-center gap-3">
+              <span aria-hidden className="h-3.5 w-[2px] rounded-full bg-primary" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+                Nossos valores
+              </span>
+            </div>
+            <h3 className="mt-4 max-w-xl font-display text-2xl font-semibold leading-tight text-foreground sm:text-3xl lg:text-[30px]">
+              Designs inteligentes e resultados precisos para sua marca digital.
             </h3>
             <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
               Conectamos sua empresa aos seus clientes através de sites que
-              elevam conversão a níveis extremos.
+              elevam a conversão a níveis extremos.
             </p>
             <a
               href="#proposta"
-              className="btn-shine mt-7 inline-flex w-fit items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-elegant)] transition-transform hover:scale-[1.02]"
-              style={{ background: "var(--gradient-primary)" }}
+              className="btn-shine mt-7 inline-flex w-fit items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background shadow-[var(--shadow-elegant)] transition-transform hover:scale-[1.02]"
             >
               Saber mais
               <ArrowRight className="size-4" />
@@ -71,39 +65,24 @@ export function Valores() {
           {cards.map((c) => (
             <article
               key={c.eyebrow}
-              className="group relative overflow-hidden rounded-3xl border border-white/[0.06] p-7 shadow-[var(--shadow-card)] sm:p-8 lg:min-h-[222px]"
+              className="group relative flex flex-col justify-center overflow-hidden rounded-3xl border border-white/[0.07] bg-card p-7 shadow-[var(--shadow-card)] sm:p-8 lg:min-h-[222px]"
               style={{
-                background:
-                  "linear-gradient(160deg, color-mix(in oklab, var(--primary) 14%, var(--card)) 0%, var(--card) 65%)",
+                boxShadow:
+                  "inset 0 1px 0 rgba(255,255,255,0.04), var(--shadow-card)",
               }}
             >
-              {/* Glow radial canto superior direito */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  background:
-                    "radial-gradient(circle at 88% 12%, color-mix(in oklab, var(--primary-glow) 32%, transparent), transparent 55%)",
-                }}
-              />
-              {/* Bolinha decorativa */}
-              <div
-                aria-hidden
-                className="absolute right-5 top-5 size-10 rounded-full opacity-85 blur-[1px]"
-                style={{ background: "var(--gradient-primary)" }}
-              />
-
-              <div className="relative">
+              <div className="flex items-center gap-3">
+                <span aria-hidden className="h-3 w-[2px] rounded-full bg-primary" />
                 <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
                   {c.eyebrow}
                 </span>
-                <h4 className="mt-3 font-display text-xl font-semibold leading-snug text-foreground sm:text-2xl">
-                  {c.title}
-                </h4>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {c.text}
-                </p>
               </div>
+              <h4 className="mt-3 font-display text-xl font-semibold leading-snug text-foreground sm:text-[22px]">
+                {c.title}
+              </h4>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {c.text}
+              </p>
             </article>
           ))}
         </div>
