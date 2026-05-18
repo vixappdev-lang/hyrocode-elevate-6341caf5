@@ -1,98 +1,100 @@
-## 1. Portfólio — imagens realistas premium (regerar as 6)
+## 1. Seção "Nossos Valores" — refinar (sem neon, sem "—")
 
-Substituir as 6 imagens em `src/assets/p1..p6-*.jpg` por screenshots **mockup-realista** de sites brasileiros modernos, formato retrato 768×1024 (mantém o card já portrait do `PortfolioSlider`).
+Editar `src/components/site/Valores.tsx`:
 
-Usar `imagegen` modelo **`premium`** (não `standard`) — é o que entrega texto legível, fotografia realista e UI crível.
+- **Remover as bolinhas azuis com glow/blur** dos cantos (efeito neon que o usuário rejeitou) — tanto do card grande quanto dos cards menores.
+- **Remover o glow radial primário** no canto dos cards menores. Trocar por um fundo `bg-card` sólido com **uma borda mais refinada** `border border-white/[0.07]` e um leve highlight superior via `box-shadow: inset 0 1px 0 rgba(255,255,255,0.04)`.
+- Card grande: manter imagem + overlay, mas **escurecer o overlay** (`from-background via-background/92 to-background/55`) e remover a bolinha azul. Substituir por um indicador discreto: linha vertical 2px à esquerda do eyebrow em `bg-primary`.
+- **Reescrever os textos sem travessões** "—":
+  - Card grande h3: "Designs inteligentes e resultados precisos para sua marca digital." (sem "—")
+  - "Nossa missão": "Priorizamos o suporte ao cliente para garantir uma experiência única antes, durante e depois do lançamento." (sem "—")
+- Tipografia: títulos `font-display` mantidos, mas reduzir um pouco o tamanho (`lg:text-[30px]` no grande) para um look mais corporativo.
+- CTA "Saber mais": trocar o gradiente azul por `bg-foreground text-background` (consistente com botões principais do site) — sem neon.
+- Cards menores: alinhar verticalmente o conteúdo ao centro (`justify-center`) para uniformidade visual já que os textos têm tamanhos diferentes.
 
-Prompt base aprimorado por nicho:
-> "Ultra-realistic, photographic-quality screenshot of a modern Brazilian [NICHO] website homepage in Brazilian Portuguese, mobile/tablet portrait view, edge-to-edge no device frame, no browser chrome. Premium contemporary web design 2025: large hero photography of real [SUJEITO], elegant sans-serif typography, headline '[HEADLINE]' clearly legible, subheadline, prominent CTA button '[CTA]', navigation bar at top with logo and 3-4 links, glimpse of next section below (services / testimonials / gallery). Color palette: [PALETA]. Awwwards-level composition, sharp focus, real photography (not illustration), accurate Portuguese text, professional UI spacing."
+## 2. Footer — reorganizar completo (estilo Stripe/Linear/Vercel)
 
-Nichos (mesmos 6 já mapeados — só refinamos prompts e paletas):
-1. **Odontologia** — branco/menta/azul claro · headline "Cuidamos do seu sorriso" · CTA "Agendar consulta" · foto paciente real sorrindo, dentista ao fundo.
-2. **Barbearia** — preto profundo + cobre/âmbar · headline "Estilo que marca" · CTA "Agendar horário" · foto barbeiro fazendo corte, iluminação cinematográfica.
-3. **Estética & Beleza** — bege/rosé/champagne · headline "Sua beleza em primeiro lugar" · CTA "Agendar avaliação" · foto skincare close-up.
-4. **Pilates** — sage/cream/off-white · headline "Movimento que transforma" · CTA "Aula experimental" · foto reformer studio luz natural.
-5. **Advocacia** — navy profundo + dourado · headline "Defendemos seus direitos" · CTA "Consultoria gratuita" · foto advogado escritório clássico.
-6. **Restaurante italiano** — terracota/creme/oliva · headline "Sabores que contam histórias" · CTA "Reservar mesa" · foto prato de massa servido, mesa rústica.
+Reescrever `src/components/site/Footer.tsx`:
 
-Sem mudar o `PortfolioSlider.tsx` (já está em retrato responsivo e bem dimensionado).
-
-## 2. Nova seção "Nossos Valores" (inspirada no print)
-
-Adicionar `src/components/site/Valores.tsx` e plugar em `src/routes/index.tsx` **entre `Proposta` e `PortfolioSlider`**.
-
-Layout (desktop ≥ lg):
+**Estrutura nova (3 colunas equilibradas)**:
 ```
-┌─────────────────────────┬───────────────────┐
-│                         │   NOSSA VISÃO     │
-│   NOSSOS VALORES        │   título + texto  │
-│   (card grande c/ bg    ├───────────────────┤
-│    image + overlay,     │   NOSSA MISSÃO    │
-│    headline, CTA)       │   título + texto  │
-└─────────────────────────┴───────────────────┘
+┌─ MARCA (col-span-5) ─┬─ NAVEGAÇÃO (col-span-3) ─┬─ SOLUÇÕES (col-span-4) ─┐
+│ Logo                 │ Início                    │ Sites Premium            │
+│ Descrição curta      │ Projetos                  │ Sistemas Web             │
+│ Ícones sociais       │ Serviços                  │ SaaS                     │
+│                      │ Processo                  │ Dashboards               │
+│                      │ Contato                   │ Automação                │
+└──────────────────────┴───────────────────────────┴──────────────────────────┘
+─────────────── © HyroCode 2026 · Política · Termos ───────────────
 ```
-- Grid `lg:grid-cols-3`: card grande ocupa `lg:col-span-2`, dois cards menores empilhados na coluna direita.
-- Mobile/tablet: stack 1 coluna, `gap-5`.
 
-Card grande:
-- Altura `min-h-[420px] lg:min-h-[460px]`.
-- Imagem de fundo (workspace dev — gerar `src/assets/valores-workspace.jpg`, 1280×860, escura, monitores com código + dashboards) + overlay `bg-gradient-to-tr from-background/95 via-background/80 to-background/40`.
-- Conteúdo bottom-left: eyebrow `NOSSOS VALORES` (primary), h3 grande font-display, parágrafo, botão `Saber mais` (variant default já existente, com `btn-shine`).
-- **NÃO usar vermelho** do print — manter paleta HyroCode: eyebrow em `text-primary`, CTA usa `--gradient-primary` (azul/glow).
+**Refinamentos**:
+- Container `max-w-7xl`, padding **reduzido** `py-14 sm:py-16` (footer mais compacto, não gigante).
+- Logo `h-12 md:h-14` (bem menor que o atual `h-16/h-20`).
+- Descrição curta: "Estúdio digital especializado em sites premium, sistemas web e experiências de alta conversão." `max-w-xs text-sm`.
+- Headings de coluna: `text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/90`.
+- Links: `text-sm text-muted-foreground` com hover refinado `hover:text-foreground transition-colors duration-200`. Espaçamento `space-y-3`.
+- Ícones sociais: minimalistas `size-9 rounded-full border border-white/[0.06]` (sem fundo glass pesado), hover `border-white/15 text-foreground`.
+- **Linha divisória premium suave**: simplificar a atual — manter apenas `bg-white/[0.06]` + um **glow extremamente discreto** central via `bg-gradient-to-r from-transparent via-primary/25 to-transparent` (sem o ponto radial brilhante, sem opacity 70). Bem mais sutil que o atual.
+- Barra inferior: `mt-12 pt-6 border-t border-white/[0.04]` com `© 2026 HyroCode` à esquerda e "Política de privacidade · Termos" à direita.
 
-Cards menores (2):
-- `rounded-2xl border border-white/[0.06]` com fundo **gradiente sutil HyroCode** (não vermelho liso): `bg-gradient-to-br from-primary/15 via-card to-card` + glow radial no canto superior direito (decoração `::after`-like via div com `radial-gradient(circle at 85% 15%, color-mix(in oklab, var(--primary-glow) 28%, transparent), transparent 55%)`).
-- Eyebrow uppercase tracking, h4 font-display, parágrafo muted.
-- Bolinha decorativa no canto superior direito (`size-12 rounded-full bg-gradient-to-br from-primary to-primary-glow opacity-80 blur-[2px]`) — equivalente sofisticado do círculo vermelho do print.
+## 3. Navbar — corrigir tamanho da logo
 
-Conteúdo:
-- **Card grande** — eyebrow "NOSSOS VALORES", h3 "Designs inteligentes, resultados precisos — escolha a HyroCode para excelência digital.", parágrafo "Conectamos sua empresa aos seus clientes através de sites que elevam conversão a níveis extremos.", CTA "Saber mais" → `#proposta`.
-- **Nossa Visão** — "Elevar sempre o valor da sua empresa em sites." + "Sites e landing pages profissionais que mostram exatamente o que seu cliente precisa ver."
-- **Nossa Missão** — "Uma parceria pensando no longo prazo." + "Priorizamos o suporte ao cliente para garantir uma experiência que só a HyroCode entrega."
+Editar `src/components/site/Navbar.tsx`:
 
-Reveal animation com `useReveal` no container.
+- Trocar `h-28 w-auto sm:h-32` por `h-10 w-auto sm:h-12` na imagem da logo.
+- Remover o `-my-4` no anchor (compensação que estava deixando a nav muito alta).
+- Resultado: navbar volta ao tamanho compacto original sem distorção pela logo grande.
 
-## 3. Footer — reorganizar + linha divisória com glow azul
+## 4. Pricing — renomear badge "Mais escolhido"
 
-Manter a estrutura 3 colunas atual mas refinar `src/components/site/Footer.tsx`:
+Editar `src/components/site/Pricing.tsx`:
 
-- **Linha superior do footer com glow azul central** (o "efeito impressão" pedido):
-  - Substituir `border-t border-white/[0.06]` por um `<div>` decorativo no topo do `<footer>`:
-    ```
-    <div aria-hidden className="relative h-px w-full">
-      <div className="absolute inset-x-0 top-0 h-px bg-white/[0.06]" />
-      <div className="absolute left-1/2 top-0 h-px w-[60%] -translate-x-1/2
-                      bg-gradient-to-r from-transparent via-primary/60 to-transparent
-                      blur-[0.5px]" />
-      <div className="absolute left-1/2 top-[-6px] h-3 w-[40%] -translate-x-1/2
-                      bg-[radial-gradient(ellipse_at_center,_color-mix(in_oklab,var(--primary-glow)_45%,transparent),_transparent_70%)]
-                      opacity-70" />
-    </div>
-    ```
-  - Estático, sem animação, vai sumindo nas pontas.
+- Trocar `badge: "Mais escolhido"` por `badge: "Recomendado"` (mais profissional e sóbrio).
+- **Alinhar melhor o card "Sistemas & Painéis Sob Medida"** que tem menos features: adicionar `flex flex-col` (já tem) e empurrar o botão CTA para a base com `mt-auto` na classe do botão (em vez de `mt-9` fixo), garantindo que ambos os cards tenham o CTA alinhado na mesma altura mesmo com listas de tamanhos diferentes.
 
-- **Reorganização visual** (mais arejado, alinhamentos consistentes):
-  - Aumentar padding vertical: `py-20 sm:py-24`.
-  - Container `max-w-7xl` (em vez de 6xl) → mais respiro.
-  - Grid: `grid-cols-1 md:grid-cols-12 gap-12 md:gap-10`.
-    - Coluna marca: `md:col-span-5` (logo, descrição, Instagram).
-    - Coluna Suporte: `md:col-span-3`.
-    - Coluna Empresa: `md:col-span-4`.
-  - Headings de coluna: tamanho menor, mesmo tracking, **cor `text-foreground`** (não primary, mantém minimalismo).
-  - Espaçamento entre links `space-y-3.5`.
-  - Logo `h-16 md:h-20` (reduzir um pouco — estava muito grande).
-  - Descrição com `max-w-sm` e leading-relaxed mantidos.
-  - Botão Instagram: `size-10`, `rounded-full`, glass, hover `text-primary-glow`.
+## 5. Formulário do Pricing — envio real de email
 
-- **Barra inferior**: separar com `mt-16 pt-6 border-t border-white/[0.05]`, layout `flex flex-col sm:flex-row items-center justify-between gap-3`:
-  - Esquerda: `© {year} HyroCode Desenvolvimento. Todos os direitos reservados.`
-  - Direita: pequeno link "Política de privacidade" + "Termos" (`text-xs text-muted-foreground hover:text-foreground`).
+O usuário quer que ao clicar "Enviar solicitação" no `ContactModal` o email seja realmente enviado para **hyrocodecontato@gmail.com**, sem abrir o cliente de email do usuário. O formulário já coleta nome, estado, WhatsApp e descrição — **adicionar campo de email do remetente** (obrigatório, validado com Zod).
 
-## 4. Não tocar
-- Hero, Navbar, Pricing, ComoFunciona, ContactModal, tokens em `styles.css`, `PortfolioSlider.tsx`.
+### Implementação técnica
+
+Como o usuário pediu envio real de email, é necessário backend. **Habilitar Lovable Cloud** (já não está ativo) — isso provisiona Supabase + permite criar a infraestrutura de emails da Lovable.
+
+**Fluxo após Cloud habilitado**:
+1. Verificar status do domínio de email com `email_domain--check_email_domain_status`.
+2. Como provavelmente não há domínio configurado, mostrar o setup dialog **`<presentation-open-email-setup>`** para o usuário configurar um sender domain (necessário para envio real e profissional).
+3. Após configurado, scaffold da infra transacional (`email_domain--setup_email_infra` + `email_domain--scaffold_transactional_email`).
+4. Criar template React Email `contact-form.tsx` em `src/lib/email-templates/` com os campos: nome, email do contato, estado, WhatsApp, descrição. Subject: "Novo contato HyroCode — {nome}".
+5. Registrar o template no `registry.ts`.
+6. Como o formulário é **público** (visitante não autenticado), criar uma rota de servidor pública em `src/routes/api/public/contact.ts` que:
+   - Valida o payload com Zod (nome 1-100, email válido, estado 2 chars, whatsapp 10-20, descrição 0-1000).
+   - Chama internamente o queue de envio para `hyrocodecontato@gmail.com` usando o template.
+   - Retorna 200 com `{ ok: true }`.
+7. Atualizar `ContactModal.tsx`:
+   - Adicionar campo "Seu email" (input type=email obrigatório).
+   - Validação client-side com Zod.
+   - On submit: `fetch('/api/public/contact', { method: 'POST', body: JSON.stringify(...) })`.
+   - Estado de loading no botão durante o envio.
+   - Tratamento de erro (toast/mensagem) se falhar.
+   - Tela de sucesso só aparece após resposta OK do servidor.
 
 ## Arquivos
-- **Editar**: `src/components/site/Footer.tsx`, `src/routes/index.tsx`.
-- **Criar**: `src/components/site/Valores.tsx`.
-- **Regerar (premium)**: `src/assets/p1-analytics.jpg` … `p6-ecom.jpg`.
-- **Gerar novo**: `src/assets/valores-workspace.jpg` (1280×860, workspace dev escuro).
+
+**Editar**:
+- `src/components/site/Valores.tsx`
+- `src/components/site/Footer.tsx`
+- `src/components/site/Navbar.tsx`
+- `src/components/site/Pricing.tsx`
+- `src/components/site/ContactModal.tsx`
+
+**Criar** (após Cloud + email domain setup):
+- `src/lib/email-templates/contact-form.tsx`
+- Atualização em `src/lib/email-templates/registry.ts`
+- `src/routes/api/public/contact.ts`
+
+**Não tocar**: Hero, Proposta, PortfolioSlider, ComoFunciona, tokens em `styles.css`, identidade visual geral.
+
+## Observação importante
+
+A parte do **envio real de email** depende de você (1) aprovar habilitar Lovable Cloud e (2) configurar um domínio de envio (eu te mostro o botão para isso após Cloud ligado). Sem domínio de envio configurado, os emails não saem de verdade. Se preferir começar só pelas partes visuais (Valores, Footer, Navbar, Pricing) e deixar o email para depois, me avisa que já implemento o que dá agora.
