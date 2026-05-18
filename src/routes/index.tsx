@@ -15,13 +15,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Estúdio de produto digital. Projetamos sites premium, plataformas SaaS, sistemas sob medida e interfaces modernas que elevam marcas.",
+          "HYROCODE cria soluções personalizadas, modernas e funcionais para destacar seu negócio online. Transformamos sua ideia em sucesso digital!",
       },
       { property: "og:title", content: "HyroCode | Estúdio de produto digital" },
       {
         property: "og:description",
         content:
-          "Sites premium, plataformas SaaS e sistemas sob medida com padrão de classe mundial.",
+          "HYROCODE cria soluções personalizadas, modernas e funcionais para destacar seu negócio online. Transformamos sua ideia em sucesso digital!",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
