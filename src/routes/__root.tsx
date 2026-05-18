@@ -108,7 +108,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           name: "HyroCode",
           url: "https://hyrocode.online",
           description:
-            "Estúdio digital especializado em sites premium, sistemas web, SaaS e experiências de alta conversão.",
+            "HYROCODE cria soluções personalizadas, modernas e funcionais para destacar seu negócio online. Transformamos sua ideia em sucesso digital!",
           sameAs: ["https://instagram.com/hyrocode"],
         }),
       },
