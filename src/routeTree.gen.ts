@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminSolicitacoesRouteImport } from './routes/admin.solicitacoes'
 import { Route as AdminRastreioRouteImport } from './routes/admin.rastreio'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as AdminConfiguracoesRouteImport } from './routes/admin.configuracoes'
 import { Route as ApiPublicTrackRouteImport } from './routes/api/public/track'
 import { Route as ApiPublicPricingButtonsRouteImport } from './routes/api/public/pricing-buttons'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
@@ -52,6 +53,11 @@ const AdminRastreioRoute = AdminRastreioRouteImport.update({
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConfiguracoesRoute = AdminConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
   getParentRoute: () => AdminRoute,
 } as any)
 const ApiPublicTrackRoute = ApiPublicTrackRouteImport.update({
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/rastreio': typeof AdminRastreioRoute
   '/admin/solicitacoes': typeof AdminSolicitacoesRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/rastreio': typeof AdminRastreioRoute
   '/admin/solicitacoes': typeof AdminSolicitacoesRoute
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/configuracoes': typeof AdminConfiguracoesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/rastreio': typeof AdminRastreioRoute
   '/admin/solicitacoes': typeof AdminSolicitacoesRoute
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/sitemap.xml'
+    | '/admin/configuracoes'
     | '/admin/dashboard'
     | '/admin/rastreio'
     | '/admin/solicitacoes'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/sitemap.xml'
+    | '/admin/configuracoes'
     | '/admin/dashboard'
     | '/admin/rastreio'
     | '/admin/solicitacoes'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/sitemap.xml'
+    | '/admin/configuracoes'
     | '/admin/dashboard'
     | '/admin/rastreio'
     | '/admin/solicitacoes'
@@ -253,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/configuracoes': {
+      id: '/admin/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/admin/configuracoes'
+      preLoaderRoute: typeof AdminConfiguracoesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/api/public/track': {
       id: '/api/public/track'
       path: '/api/public/track'
@@ -313,12 +332,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminConfiguracoesRoute: typeof AdminConfiguracoesRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminRastreioRoute: typeof AdminRastreioRoute
   AdminSolicitacoesRoute: typeof AdminSolicitacoesRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminConfiguracoesRoute: AdminConfiguracoesRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminRastreioRoute: AdminRastreioRoute,
   AdminSolicitacoesRoute: AdminSolicitacoesRoute,
