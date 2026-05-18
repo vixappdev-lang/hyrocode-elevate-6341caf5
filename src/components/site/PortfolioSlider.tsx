@@ -5,8 +5,6 @@ import p3 from "@/assets/p3-billing.jpg";
 import p4 from "@/assets/p4-fintech.jpg";
 import p5 from "@/assets/p5-projects.jpg";
 import p6 from "@/assets/p6-ecom.jpg";
-import p7 from "@/assets/p7-health.jpg";
-import p8 from "@/assets/p8-landing.jpg";
 
 type Project = {
   img: string;
@@ -15,14 +13,12 @@ type Project = {
 };
 
 const projects: Project[] = [
-  { img: p1, name: "Nubex Fintech", category: "Landing · Fintech" },
-  { img: p2, name: "Canabary Sales", category: "Dashboard · SaaS" },
-  { img: p3, name: "Malin Fashion", category: "E-commerce · Moda" },
-  { img: p4, name: "QuickEats", category: "App · Delivery" },
-  { img: p5, name: "Clínica Contices", category: "Site · Saúde" },
-  { img: p6, name: "Splash Courses", category: "Plataforma · EAD" },
-  { img: p7, name: "NestLands", category: "CRM · Imobiliário" },
-  { img: p8, name: "Crust Studio", category: "Site · Agência" },
+  { img: p1, name: "Sorriso Bem Estar", category: "Clínica Odontológica" },
+  { img: p2, name: "Barbearia Don Lucca", category: "Barbearia" },
+  { img: p3, name: "Lumière Estética", category: "Estética & Beleza" },
+  { img: p4, name: "Core Pilates Studio", category: "Studio de Pilates" },
+  { img: p5, name: "Almeida & Ribeiro", category: "Advocacia" },
+  { img: p6, name: "Cantina Bella Massa", category: "Restaurante" },
 ];
 
 export function PortfolioSlider() {
@@ -39,8 +35,8 @@ export function PortfolioSlider() {
           Projetos reais entregues.
         </h2>
         <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Confira alguns dos últimos projetos realizados pela HyroCode —
-          sites, sistemas e plataformas construídos do zero para clientes reais.
+          Confira alguns dos últimos projetos desenvolvidos pela HyroCode —
+          sites pensados para vender, agendar e gerar autoridade para o seu negócio.
         </p>
       </div>
 
@@ -48,9 +44,7 @@ export function PortfolioSlider() {
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-background to-transparent sm:w-32" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-background to-transparent sm:w-32" />
 
-        <div
-          className="flex w-max gap-4 sm:gap-5 marquee-track"
-        >
+        <div className="flex w-max gap-4 sm:gap-5 marquee-track">
           {loop.map((p, i) => (
             <article
               key={`${p.name}-${i}`}
@@ -59,8 +53,8 @@ export function PortfolioSlider() {
               <img
                 src={p.img}
                 alt={`${p.name} — ${p.category}`}
-                width={900}
-                height={1200}
+                width={1024}
+                height={1536}
                 loading="lazy"
                 className="absolute inset-0 size-full object-cover object-top transition-transform duration-[1.4s] ease-out group-hover/card:scale-[1.04]"
               />

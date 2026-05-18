@@ -30,18 +30,18 @@ export function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 sm:pt-5">
       <nav
-        className={`flex w-full max-w-6xl items-center justify-between rounded-full pl-2 pr-2 py-1.5 sm:pl-3 sm:pr-3 sm:py-1.5 transition-all duration-500 ${
+        className={`flex w-full max-w-6xl items-center justify-between rounded-full pl-3 pr-2 py-1 sm:pl-4 sm:pr-3 sm:py-1 transition-all duration-500 ${
           scrolled
             ? "glass shadow-[var(--shadow-glass)]"
             : "border border-transparent bg-transparent"
         }`}
         aria-label="Principal"
       >
-        <a href="#top" className="flex items-center">
+        <a href="#top" className="flex items-center -my-2">
           <img
             src={logo}
             alt="HyroCode"
-            className="h-12 w-auto sm:h-14 select-none"
+            className="h-20 w-auto sm:h-24 select-none"
             draggable={false}
           />
         </a>

@@ -1,45 +1,74 @@
+import { useState } from "react";
 import { Check, Sparkles } from "lucide-react";
 import { useReveal } from "@/hooks/use-reveal";
+import { ContactModal } from "./ContactModal";
 
-const plans = [
+type Plan = {
+  name: string;
+  badge: string | null;
+  price: string;
+  installments: string | null;
+  priceSuffix?: string | null;
+  desc: string;
+  features: string[];
+  highlighted: boolean;
+  cta: { type: "link" | "modal"; label: string; href?: string };
+};
+
+const plans: Plan[] = [
   {
     name: "Landing Page Premium",
-    badge: null as string | null,
+    badge: null,
     price: "R$ 497",
+    priceSuffix: "à vista",
     installments: "ou 12× de R$ 49,70",
-    desc: "Ideal para profissionais e marcas que querem presença forte e conversão alta.",
+    desc: "Ideal para profissionais e marcas que querem presença forte, autoridade e conversão alta.",
     features: [
-      "Logotipo profissional incluso",
-      "Design 100% personalizado",
-      "Estrutura totalmente responsiva",
-      "Animações premium",
-      "SEO técnico otimizado",
-      "Hospedagem orientada",
-      "Entrega em até 7 dias",
+      "Logotipo feito do zero",
+      "Banners profissionais",
+      "Design personalizado",
+      "Estrutura responsiva",
+      "SEO básico",
+      "Conteúdo visual",
+      "Configuração de domínio",
+      "Garantia de desempenho",
+      "2 rodadas completas de alterações",
+      "Formulário de captura de leads (opcional)",
+      "Estrutura 100% personalizada",
     ],
     highlighted: false,
+    cta: {
+      type: "link",
+      label: "QUERO ESSE",
+      href: "https://wa.me/?text=Quero%20a%20Landing%20Page%20Premium%20da%20HyroCode",
+    },
   },
   {
-    name: "Painel / Sistema Web",
+    name: "Sistemas & Painéis Sob Medida",
     badge: "Mais escolhido",
-    price: "R$ 697",
-    installments: "ou 12× de R$ 69,70",
-    desc: "Para quem precisa de um sistema completo com painel administrativo e funcionalidades reais.",
+    price: "Valor a consultar",
+    priceSuffix: null,
+    installments: null,
+    desc: "Para software, painel administrativo, CRM, dashboards e automações desenvolvidas sob medida para o seu negócio.",
     features: [
-      "Tudo do plano Landing",
+      "Software sob medida",
       "Painel administrativo completo",
-      "Banco de dados integrado",
-      "Login e área de usuário",
+      "CRM personalizado",
+      "Integrações com APIs",
+      "Banco de dados robusto",
+      "Login e controle de permissões",
       "Dashboard com métricas",
-      "Integrações sob medida",
-      "Suporte por 30 dias",
+      "Escopo definido conforme sua necessidade",
     ],
     highlighted: true,
+    cta: { type: "modal", label: "Entrar em contato" },
   },
 ];
 
 export function Pricing() {
   const ref = useReveal<HTMLDivElement>();
+  const [modalOpen, setModalOpen] = useState(false);
+
   return (
     <section id="precos" className="relative py-28 sm:py-32">
       <div
@@ -100,12 +129,16 @@ export function Pricing() {
               </p>
 
               <div className="mt-6 flex items-baseline gap-2">
-                <span className="font-display text-4xl font-bold text-foreground sm:text-5xl">
+                <span className="font-display text-3xl font-bold text-foreground sm:text-4xl">
                   {p.price}
                 </span>
-                <span className="text-xs text-muted-foreground">à vista</span>
+                {p.priceSuffix && (
+                  <span className="text-xs text-muted-foreground">{p.priceSuffix}</span>
+                )}
               </div>
-              <div className="mt-1 text-sm text-muted-foreground">{p.installments}</div>
+              {p.installments && (
+                <div className="mt-1 text-sm text-muted-foreground">{p.installments}</div>
+              )}
 
               <ul className="mt-7 space-y-3">
                 {p.features.map((f) => (
@@ -118,22 +151,38 @@ export function Pricing() {
                 ))}
               </ul>
 
-              <a
-                href="https://wa.me/?text=Quero%20esse%20plano%20da%20HyroCode"
-                target="_blank"
-                rel="noopener"
-                className={`btn-shine mt-9 inline-flex items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] ${
-                  p.highlighted
-                    ? "bg-foreground text-background shadow-[var(--shadow-elegant)]"
-                    : "glass text-foreground hover:bg-white/[0.06]"
-                }`}
-              >
-                QUERO ESSE
-              </a>
+              {p.cta.type === "link" ? (
+                <a
+                  href={p.cta.href}
+                  target="_blank"
+                  rel="noopener"
+                  className={`btn-shine mt-9 inline-flex items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] ${
+                    p.highlighted
+                      ? "bg-foreground text-background shadow-[var(--shadow-elegant)]"
+                      : "glass text-foreground hover:bg-white/[0.06]"
+                  }`}
+                >
+                  {p.cta.label}
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setModalOpen(true)}
+                  className={`btn-shine mt-9 inline-flex items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] ${
+                    p.highlighted
+                      ? "bg-foreground text-background shadow-[var(--shadow-elegant)]"
+                      : "glass text-foreground hover:bg-white/[0.06]"
+                  }`}
+                >
+                  {p.cta.label}
+                </button>
+              )}
             </div>
           ))}
         </div>
       </div>
+
+      <ContactModal open={modalOpen} onOpenChange={setModalOpen} />
     </section>
   );
 }
