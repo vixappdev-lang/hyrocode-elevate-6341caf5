@@ -77,7 +77,7 @@ export function Hero() {
             </div>
 
             {/* Browser content */}
-            <div className="relative grid grid-cols-12 gap-4 p-5 sm:p-7">
+            <div className="relative grid grid-cols-12 gap-3 p-4 sm:gap-4 sm:p-7">
               {/* Left: copy + bars */}
               <div className="col-span-12 sm:col-span-7">
                 <div className="h-2.5 w-24 rounded-full bg-primary/40" />
