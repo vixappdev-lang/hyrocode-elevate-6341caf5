@@ -75,9 +75,8 @@ function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Top bar — sem traffic lights */}
-      <header className="fixed inset-x-0 top-0 z-30 h-14 border-b border-white/[0.05] bg-background/70 backdrop-blur-xl">
-        <div className="flex h-full items-center justify-between gap-3 px-5">
+      <header className="fixed inset-x-0 top-0 z-30 h-14 border-b border-border bg-background/72 backdrop-blur-2xl">
+        <div className="flex h-full items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
             <span className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">HyroCode</span>
             <span className="text-xs text-muted-foreground/40">/</span>
@@ -86,11 +85,9 @@ function AdminLayout() {
         </div>
       </header>
 
-      {/* Dock glass — fixo no topo (PC) e no rodapé (celular) — mesmo design */}
       <DockMenu path={path} onLogout={onLogout} />
 
-      {/* Content */}
-      <main className="pt-20 pb-28 min-h-screen">
+      <main className="min-h-screen pb-28 pt-20 sm:pb-32">
         <div className="px-4 sm:px-6 lg:px-8">
           <Outlet />
         </div>
@@ -101,26 +98,20 @@ function AdminLayout() {
 
 function DockMenu({ path, onLogout }: { path: string; onLogout: () => void }) {
   return (
-    <>
-      {/* Desktop: top centered */}
-      <div className="fixed left-1/2 top-3 z-40 hidden -translate-x-1/2 lg:block">
-        <DockInner path={path} onLogout={onLogout} />
-      </div>
-      {/* Mobile: bottom centered */}
-      <div className="fixed left-1/2 bottom-4 z-40 -translate-x-1/2 lg:hidden">
-        <DockInner path={path} onLogout={onLogout} />
-      </div>
-    </>
+    <div className="fixed inset-x-0 bottom-3 z-40 flex justify-center px-3 pb-[env(safe-area-inset-bottom)] sm:bottom-5">
+      <DockInner path={path} onLogout={onLogout} />
+    </div>
   );
 }
 
 function DockInner({ path, onLogout }: { path: string; onLogout: () => void }) {
   return (
-    <div
-      className="flex items-center gap-1 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-1.5 backdrop-blur-2xl"
+    <nav
+      aria-label="Menu do painel"
+      className="flex max-w-full items-center gap-1 overflow-x-auto rounded-2xl border border-border bg-card/68 p-1.5 backdrop-blur-2xl"
       style={{
         boxShadow:
-          "0 10px 40px -10px rgba(0,0,0,.6), inset 0 1px 0 0 rgba(255,255,255,0.06)",
+          "var(--shadow-card), inset 0 1px 0 0 color-mix(in oklab, white 7%, transparent)",
       }}
     >
       {items.map((item) => {
@@ -134,15 +125,15 @@ function DockInner({ path, onLogout }: { path: string; onLogout: () => void }) {
             aria-label={item.label}
             className={`group relative grid size-11 place-items-center rounded-xl transition ${
               isActive
-                ? "bg-primary text-primary-foreground shadow-[0_6px_20px_-6px_hsl(var(--primary)/0.6)]"
-                : "text-muted-foreground hover:text-foreground hover:bg-white/[0.06]"
+                ? "bg-foreground text-background"
+                : "text-muted-foreground hover:bg-foreground/8 hover:text-foreground"
             }`}
           >
             <Icon className="size-[18px]" strokeWidth={1.7} />
             {/* tooltip */}
             <span
               className={`pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md border border-white/10 bg-background/95 px-2 py-1 text-[10px] text-foreground opacity-0 shadow transition group-hover:opacity-100 lg:top-full lg:mt-2 ${
-                "max-lg:bottom-full max-lg:mb-2"
+                "bottom-full mb-2"
               }`}
             >
               {item.label}
@@ -150,16 +141,16 @@ function DockInner({ path, onLogout }: { path: string; onLogout: () => void }) {
           </Link>
         );
       })}
-      <span className="mx-1 h-7 w-px bg-white/[0.08]" />
+      <span className="mx-1 h-7 w-px bg-border" />
       <button
         onClick={onLogout}
         title="Sair"
         aria-label="Sair"
-        className="grid size-11 place-items-center rounded-xl text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
+        className="grid size-11 place-items-center rounded-xl text-muted-foreground transition hover:bg-foreground/8 hover:text-foreground"
       >
         <LogOut className="size-[18px]" strokeWidth={1.7} />
       </button>
-    </div>
+    </nav>
   );
 }
 
