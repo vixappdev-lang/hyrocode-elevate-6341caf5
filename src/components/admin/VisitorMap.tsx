@@ -153,7 +153,7 @@ export default function VisitorMap({ visitors }: { visitors: Visitor[] }) {
       <style>{`
         @keyframes visitorPulse { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(2.8); opacity: 0; } }
         @keyframes scanLine { 0% { transform: translateY(-100%); opacity: 0; } 20% { opacity: .7; } 100% { transform: translateY(100%); opacity: 0; } }
-        .leaflet-container { height: 100%; width: 100%; background: hsl(var(--background)); font-family: inherit; }
+        .leaflet-container { height: 100%; width: 100%; background: var(--background); font-family: inherit; }
         .leaflet-tile { filter: saturate(.9) contrast(1.08); }
         .leaflet-control-zoom { border: 1px solid color-mix(in oklab, white 12%, transparent) !important; border-radius: 14px; overflow:hidden; box-shadow: var(--shadow-card); }
         .leaflet-control-zoom a { width: 34px !important; height: 34px !important; line-height: 32px !important; border: 0 !important; background: color-mix(in oklab, var(--card) 82%, transparent) !important; color: var(--foreground) !important; backdrop-filter: blur(18px); }
@@ -170,7 +170,11 @@ export default function VisitorMap({ visitors }: { visitors: Visitor[] }) {
       <div ref={containerRef} className="absolute inset-0" />
       <div aria-hidden className="pointer-events-none absolute inset-0 z-[400] opacity-[0.13] [background-image:linear-gradient(color-mix(in_oklab,var(--primary-glow)_42%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_oklab,var(--primary-glow)_42%,transparent)_1px,transparent_1px)] [background-size:54px_54px]" />
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 z-[401] h-1/2 bg-gradient-to-b from-primary/10 to-transparent" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-[402] bg-[radial-gradient(ellipse_at_center,transparent_46%,hsl(var(--background)/.58)_100%)]" />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-[402]"
+        style={{ background: "radial-gradient(ellipse at center, transparent 46%, color-mix(in oklab, var(--background) 58%, transparent) 100%)" }}
+      />
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 z-[403] h-24 bg-gradient-to-b from-background/50 to-transparent" />
       <div aria-hidden className="pointer-events-none absolute inset-x-0 z-[404] h-24 bg-gradient-to-b from-transparent via-primary/10 to-transparent" style={{ animation: "scanLine 5.5s linear infinite" }} />
       {points.length === 0 && (
