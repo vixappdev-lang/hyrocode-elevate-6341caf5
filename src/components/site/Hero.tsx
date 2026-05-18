@@ -63,7 +63,7 @@ export function Hero() {
 
           {/* Browser mockup central */}
           <div
-            className="absolute left-1/2 top-1/2 w-[88%] max-w-[760px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-white/[0.08] bg-card shadow-[var(--shadow-elegant)]"
+            className="absolute left-1/2 top-1/2 w-[92%] max-w-[760px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-white/[0.08] bg-card shadow-[var(--shadow-elegant)] sm:w-[88%]"
             style={{ animation: "float-y 6s ease-in-out infinite" }}
           >
             {/* Browser top bar */}
