@@ -149,18 +149,18 @@ export function Hero() {
 
           {/* Floating card top-left: conversion */}
           <div
-            className="absolute left-2 top-6 hidden w-[210px] rounded-2xl border border-white/[0.08] bg-card/90 p-4 shadow-[var(--shadow-card)] backdrop-blur-xl sm:block"
-            style={{ animation: "float-y 5s ease-in-out infinite", animationDelay: "-1.5s", transform: "rotate(-4deg)" }}
+            className="absolute -left-1 top-0 w-[150px] rounded-2xl border border-white/[0.08] bg-card/90 p-3 shadow-[var(--shadow-card)] backdrop-blur-xl sm:left-2 sm:top-6 sm:w-[210px] sm:p-4"
+            style={{ animation: "float-y 5s ease-in-out infinite", animationDelay: "-1.5s", transform: "rotate(-3deg)" }}
           >
-            <div className="flex items-center gap-3">
-              <div className="flex size-9 items-center justify-center rounded-xl bg-primary/15 text-primary-glow">
-                <TrendingUp className="size-4" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex size-8 items-center justify-center rounded-xl bg-primary/15 text-primary-glow sm:size-9">
+                <TrendingUp className="size-3.5 sm:size-4" />
               </div>
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                <div className="text-[9px] uppercase tracking-wider text-muted-foreground sm:text-[10px]">
                   Conversão
                 </div>
-                <div className="font-display text-lg font-semibold text-foreground">
+                <div className="font-display text-base font-semibold text-foreground sm:text-lg">
                   +218%
                 </div>
               </div>
@@ -175,18 +175,18 @@ export function Hero() {
 
           {/* Floating card bottom-right: performance */}
           <div
-            className="absolute bottom-4 right-2 hidden w-[210px] rounded-2xl border border-white/[0.08] bg-card/90 p-4 shadow-[var(--shadow-card)] backdrop-blur-xl sm:block"
-            style={{ animation: "float-y 5.5s ease-in-out infinite", animationDelay: "-2.8s", transform: "rotate(3.5deg)" }}
+            className="absolute -right-1 bottom-0 w-[150px] rounded-2xl border border-white/[0.08] bg-card/90 p-3 shadow-[var(--shadow-card)] backdrop-blur-xl sm:bottom-4 sm:right-2 sm:w-[210px] sm:p-4"
+            style={{ animation: "float-y 5.5s ease-in-out infinite", animationDelay: "-2.8s", transform: "rotate(3deg)" }}
           >
-            <div className="flex items-center gap-3">
-              <div className="flex size-9 items-center justify-center rounded-xl bg-primary/15 text-primary-glow">
-                <Gauge className="size-4" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex size-8 items-center justify-center rounded-xl bg-primary/15 text-primary-glow sm:size-9">
+                <Gauge className="size-3.5 sm:size-4" />
               </div>
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                <div className="text-[9px] uppercase tracking-wider text-muted-foreground sm:text-[10px]">
                   Performance
                 </div>
-                <div className="font-display text-lg font-semibold text-foreground">
+                <div className="font-display text-base font-semibold text-foreground sm:text-lg">
                   98 / 100
                 </div>
               </div>
