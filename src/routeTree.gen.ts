@@ -16,6 +16,7 @@ import { Route as ApiPublicTrackRouteImport } from './routes/api/public/track'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
 import { Route as ApiPublicAdminVisitorsRouteImport } from './routes/api/public/admin-visitors'
 import { Route as ApiPublicAdminStatsRouteImport } from './routes/api/public/admin-stats'
+import { Route as ApiPublicAdminSettingsRouteImport } from './routes/api/public/admin-settings'
 import { Route as ApiPublicAdminLoginRouteImport } from './routes/api/public/admin-login'
 import { Route as ApiPublicAdminContactsRouteImport } from './routes/api/public/admin-contacts'
 
@@ -54,6 +55,11 @@ const ApiPublicAdminStatsRoute = ApiPublicAdminStatsRouteImport.update({
   path: '/api/public/admin-stats',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicAdminSettingsRoute = ApiPublicAdminSettingsRouteImport.update({
+  id: '/api/public/admin-settings',
+  path: '/api/public/admin-settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicAdminLoginRoute = ApiPublicAdminLoginRouteImport.update({
   id: '/api/public/admin-login',
   path: '/api/public/admin-login',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/admin/contatos': typeof AdminContatosRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
+  '/api/public/admin-settings': typeof ApiPublicAdminSettingsRoute
   '/api/public/admin-stats': typeof ApiPublicAdminStatsRoute
   '/api/public/admin-visitors': typeof ApiPublicAdminVisitorsRoute
   '/api/public/contact': typeof ApiPublicContactRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/admin/contatos': typeof AdminContatosRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
+  '/api/public/admin-settings': typeof ApiPublicAdminSettingsRoute
   '/api/public/admin-stats': typeof ApiPublicAdminStatsRoute
   '/api/public/admin-visitors': typeof ApiPublicAdminVisitorsRoute
   '/api/public/contact': typeof ApiPublicContactRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/admin/contatos': typeof AdminContatosRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
+  '/api/public/admin-settings': typeof ApiPublicAdminSettingsRoute
   '/api/public/admin-stats': typeof ApiPublicAdminStatsRoute
   '/api/public/admin-visitors': typeof ApiPublicAdminVisitorsRoute
   '/api/public/contact': typeof ApiPublicContactRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/admin/contatos'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
+    | '/api/public/admin-settings'
     | '/api/public/admin-stats'
     | '/api/public/admin-visitors'
     | '/api/public/contact'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/admin/contatos'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
+    | '/api/public/admin-settings'
     | '/api/public/admin-stats'
     | '/api/public/admin-visitors'
     | '/api/public/contact'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/admin/contatos'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
+    | '/api/public/admin-settings'
     | '/api/public/admin-stats'
     | '/api/public/admin-visitors'
     | '/api/public/contact'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   AdminContatosRoute: typeof AdminContatosRoute
   ApiPublicAdminContactsRoute: typeof ApiPublicAdminContactsRoute
   ApiPublicAdminLoginRoute: typeof ApiPublicAdminLoginRoute
+  ApiPublicAdminSettingsRoute: typeof ApiPublicAdminSettingsRoute
   ApiPublicAdminStatsRoute: typeof ApiPublicAdminStatsRoute
   ApiPublicAdminVisitorsRoute: typeof ApiPublicAdminVisitorsRoute
   ApiPublicContactRoute: typeof ApiPublicContactRoute
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicAdminStatsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/admin-settings': {
+      id: '/api/public/admin-settings'
+      path: '/api/public/admin-settings'
+      fullPath: '/api/public/admin-settings'
+      preLoaderRoute: typeof ApiPublicAdminSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/admin-login': {
       id: '/api/public/admin-login'
       path: '/api/public/admin-login'
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminContatosRoute: AdminContatosRoute,
   ApiPublicAdminContactsRoute: ApiPublicAdminContactsRoute,
   ApiPublicAdminLoginRoute: ApiPublicAdminLoginRoute,
+  ApiPublicAdminSettingsRoute: ApiPublicAdminSettingsRoute,
   ApiPublicAdminStatsRoute: ApiPublicAdminStatsRoute,
   ApiPublicAdminVisitorsRoute: ApiPublicAdminVisitorsRoute,
   ApiPublicContactRoute: ApiPublicContactRoute,
