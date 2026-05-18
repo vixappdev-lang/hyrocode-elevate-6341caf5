@@ -41,20 +41,20 @@ export function PortfolioSlider() {
       </div>
 
       <div className="relative mt-12 overflow-hidden sm:mt-16">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-background to-transparent sm:w-24 lg:w-32" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-background to-transparent sm:w-24 lg:w-32" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-background to-transparent sm:w-20 lg:w-28" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-background to-transparent sm:w-20 lg:w-28" />
 
-        <div className="flex w-max gap-4 sm:gap-6 lg:gap-8 marquee-track">
+        <div className="flex w-max gap-4 sm:gap-5 lg:gap-6 marquee-track">
           {loop.map((p, i) => (
             <article
               key={`${p.name}-${i}`}
-              className="group/card relative h-[220px] w-[300px] shrink-0 overflow-hidden rounded-2xl border border-white/[0.06] bg-card transition-all duration-500 hover:-translate-y-1 sm:h-[280px] sm:w-[400px] lg:h-[320px] lg:w-[480px]"
+              className="group/card relative h-[280px] w-[200px] shrink-0 overflow-hidden rounded-2xl border border-white/[0.06] bg-card transition-all duration-500 hover:-translate-y-1 sm:h-[340px] sm:w-[240px] lg:h-[400px] lg:w-[280px]"
             >
               <img
                 src={p.img}
                 alt={`${p.name} — ${p.category}`}
-                width={1280}
-                height={720}
+                width={768}
+                height={1024}
                 loading="lazy"
                 className="absolute inset-0 size-full object-cover object-top transition-transform duration-[1.4s] ease-out group-hover/card:scale-[1.03]"
               />
@@ -71,7 +71,7 @@ export function PortfolioSlider() {
                 }}
               />
 
-              <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+              <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4">
                 <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-primary-glow sm:text-[11px]">
                   {p.category}
                 </div>

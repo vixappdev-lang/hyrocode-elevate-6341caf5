@@ -1,84 +1,52 @@
-# Plano de ajustes — HyroCode
+# Portfólio — cards em retrato + imagens realistas
 
-## 1. Portfólio — voltar para prints de site (modernos e profissionais)
+## 1. Regerar as 6 imagens em formato retrato (mobile/tablet view)
 
-O usuário não quis o mockup de notebook flutuando. Voltamos para **screenshots de site reais** (como estava antes), mas agora **modernizados**: UI mais limpa, tipografia em português, paleta sóbria, tirando o ar "amador".
+Como os cards vão ficar verticais (retrato), as imagens precisam ser **screenshots de sites na vista mobile/tablet** (formato 3:4 ou 9:16) para preencher bem o card sem corte estranho.
 
-Regerar `src/assets/p1-analytics.jpg` … `p6-ecom.jpg` com prompt do tipo:
+Dimensões: **768×1024** (proporção 3:4, retrato).
 
-> "Photorealistic full-screen screenshot of a modern Brazilian [nicho] website homepage in Portuguese, premium minimal UI, elegant typography, generous whitespace, hero section visible with headline + CTA button + product/service photo, clean navigation bar, professional color palette, shot straight-on (not tilted), 16:9, no laptop frame, no browser chrome, just the website canvas, agency-quality design, Awwwards-level"
+Prompt base (modelo `standard`):
+> "Flat website screenshot in MOBILE/TABLET portrait view, edge to edge, NO phone frame, NO laptop, NO browser chrome, NO device mockup — just the website canvas filling the whole image vertically. Modern Brazilian [NICHO] website homepage in Brazilian Portuguese, premium design, [PALETA], elegant headline visible, CTA button, hero photography, vertical scroll layout with hero section + a glimpse of the next section. Awwwards quality, realistic, professional."
 
-Nichos:
-1. Clínica Odontológica
-2. Barbearia
-3. Estética & Beleza
-4. Studio de Pilates
-5. Advocacia
-6. Restaurante
+Nichos + ajustes:
+1. **Clínica Odontológica** — paleta branco/menta, headline "Cuidamos do seu sorriso", CTA "Agendar consulta", foto de paciente sorrindo.
+2. **Barbearia** — fundo escuro + acentos cobre, headline "Estilo que marca", CTA "Agendar horário", foto barbeiro/cliente.
+3. **Estética & Beleza** — bege/rosé, headline "Sua beleza em primeiro lugar", CTA "Agendar avaliação", foto modelo skincare.
+4. **Studio de Pilates** — sage/cream, headline "Movimento que transforma", CTA "Aula experimental", foto pilates reformer.
+5. **Advocacia** — navy/dourado, headline "Defendemos seus direitos", CTA "Consultoria", foto advogado.
+6. **Restaurante italiano** — terracota/creme, headline "Sabores que contam histórias", CTA "Reservar mesa", foto prato de massa.
 
-`PortfolioSlider.tsx`:
-- Cards 100% responsivos:
-  - Mobile: `h-[220px] w-[300px]`
-  - Tablet: `sm:h-[280px] sm:w-[400px]`
-  - Desktop: `lg:h-[320px] lg:w-[480px]`
-- Gap: `gap-4 sm:gap-6 lg:gap-8`.
-- Fades das bordas: `w-16 sm:w-24 lg:w-32`.
-- `object-cover object-top`, borda sutil `border border-white/[0.06]`, `rounded-2xl`.
-- Overlay enxuto: **mostrar apenas o nicho/categoria** (ex: "Clínica Odontológica") como eyebrow em `text-primary-glow uppercase tracking-[0.18em]`. Nome do negócio sai do overlay visível e fica só no `alt` da imagem (acessibilidade/SEO). Sem títulos grandes expostos.
-- Manter marquee em loop automático.
+Arquivos sobrescritos:
+- `src/assets/p1-analytics.jpg` … `p6-ecom.jpg`
 
-## 2. Hero — adaptar bem para mobile (390px)
+## 2. Cards do PortfolioSlider — formato retrato 100% responsivo
 
-Hoje os 2 cards flutuantes laterais estão `hidden sm:block` (somem no mobile) e o mockup central ocupa altura enorme com muito vazio.
+Atualizar `src/components/site/PortfolioSlider.tsx`:
 
-`src/components/site/Hero.tsx`:
-- Container do visual: `h-[320px] sm:h-[440px] lg:h-[500px]`.
-- Mockup central: `w-[94%] sm:w-[88%]`, padding `p-4 sm:p-7`.
-- Browser top bar mantém `hidden sm:flex` na barra de URL.
-- Cards flutuantes laterais: passar a aparecer no mobile também, menores:
-  - `w-[140px] sm:w-[210px]`
-  - Remover `hidden sm:block` → visíveis sempre
-  - Reduzir rotação no mobile (`-rotate-3` / `rotate-3`)
-  - Reposicionar para não cobrir o centro (top-left e bottom-right com offsets adequados ao container menor)
-- Texto e CTAs mantidos (já responsivos).
+- Trocar dimensões para **retrato** (proporção ~3:4):
+  - Mobile (390px): `w-[200px] h-[280px]`
+  - Tablet: `sm:w-[240px] sm:h-[340px]`
+  - Desktop: `lg:w-[280px] lg:h-[400px]`
+- Gap entre cards: `gap-4 sm:gap-5 lg:gap-6` (mais cards visíveis simultaneamente já que ficam estreitos).
+- `object-cover object-top` continua, mostrando o topo da página vertical.
+- Border radius `rounded-2xl`, borda sutil `border border-white/[0.06]`.
+- Hover: `-translate-y-1`, glow leve já implementado.
+- Overlay base: apenas o nicho (categoria) como eyebrow em primary-glow, sem nome do negócio exposto (igual já está).
+- Marquee em loop automático mantido.
+- Fades laterais: `w-12 sm:w-20 lg:w-28` (ajustados ao novo card mais estreito).
+- Atributos da `<img>`: atualizar `width={768} height={1024}` para refletir a nova proporção e evitar CLS.
 
-## 3. Footer — layout 3 colunas estilo exemplo
-
-Inspirado no print do usuário: **logo + descrição + Instagram à esquerda**, **"Suporte" no meio**, **"Empresa" à direita**. Manter paleta da marca (não copiar o vermelho do exemplo).
-
-```text
-┌──────────────────────────────────────────────────────────────┐
-│  [LOGO]               Suporte           Empresa              │
-│  Descrição curta...   Central de ajuda  Início               │
-│  [@ Instagram]        FAQ               Portfólio            │
-│                       Contato           Como funciona        │
-│                                         Preços               │
-├──────────────────────────────────────────────────────────────┤
-│  Feito com carinho por HyroCode Desenvolvimento · © 2026     │
-└──────────────────────────────────────────────────────────────┘
-```
-
-`src/components/site/Footer.tsx`:
-- Grid: `grid-cols-1 md:grid-cols-3 gap-12 md:gap-16`.
-- Coluna 1: logo `h-20 md:h-24`, descrição curta, botão circular do Instagram.
-- Coluna 2 "Suporte": Central de ajuda, FAQ, Contato.
-- Coluna 3 "Empresa": Início, Portfólio, Como funciona, Preços (âncoras existentes).
-- Títulos: `text-sm font-semibold uppercase tracking-[0.14em] text-foreground` (sem cor vermelha).
-- Links: `text-sm text-muted-foreground hover:text-foreground transition-colors`.
-- Linha inferior: copy centralizada com `border-t border-white/[0.06] pt-6 mt-12`.
-- Mobile: empilhado, alinhamento `text-left`, padding `px-6 py-16`.
-
-## 4. Otimização
-- Limpar qualquer resíduo de `orb-*` em `styles.css` se ainda existir.
-- Manter `loading="lazy"` nos prints, dimensões `width={1280} height={720}` para evitar CLS.
+## 3. Não mexer
+- Hero, Footer, Navbar, Pricing, ContactModal, Proposta, ComoFunciona, tokens.
 
 ## Arquivos a editar
 - `src/components/site/PortfolioSlider.tsx`
-- `src/components/site/Hero.tsx`
-- `src/components/site/Footer.tsx`
 
-## Assets a regerar (1280×720)
-- `src/assets/p1-analytics.jpg` … `p6-ecom.jpg`
-
-## Não mexer
-- Navbar, Pricing, ContactModal, Proposta, ComoFunciona, tokens de cor.
+## Assets a regerar (768×1024 retrato)
+- `src/assets/p1-analytics.jpg`
+- `src/assets/p2-crm.jpg`
+- `src/assets/p3-billing.jpg`
+- `src/assets/p4-fintech.jpg`
+- `src/assets/p5-projects.jpg`
+- `src/assets/p6-ecom.jpg`
