@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminContatosRouteImport } from './routes/admin.contatos'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
 import { Route as ApiPublicAdminLoginRouteImport } from './routes/api/public/admin-login'
 import { Route as ApiPublicAdminContactsRouteImport } from './routes/api/public/admin-contacts'
@@ -17,6 +18,11 @@ import { Route as ApiPublicAdminContactsRouteImport } from './routes/api/public/
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminContatosRoute = AdminContatosRouteImport.update({
+  id: '/admin/contatos',
+  path: '/admin/contatos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicContactRoute = ApiPublicContactRouteImport.update({
@@ -37,12 +43,14 @@ const ApiPublicAdminContactsRoute = ApiPublicAdminContactsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin/contatos': typeof AdminContatosRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
   '/api/public/contact': typeof ApiPublicContactRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin/contatos': typeof AdminContatosRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
   '/api/public/contact': typeof ApiPublicContactRoute
@@ -50,6 +58,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin/contatos': typeof AdminContatosRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
   '/api/public/contact': typeof ApiPublicContactRoute
@@ -58,18 +67,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin/contatos'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
     | '/api/public/contact'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin/contatos'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
     | '/api/public/contact'
   id:
     | '__root__'
     | '/'
+    | '/admin/contatos'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
     | '/api/public/contact'
@@ -77,6 +89,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminContatosRoute: typeof AdminContatosRoute
   ApiPublicAdminContactsRoute: typeof ApiPublicAdminContactsRoute
   ApiPublicAdminLoginRoute: typeof ApiPublicAdminLoginRoute
   ApiPublicContactRoute: typeof ApiPublicContactRoute
@@ -89,6 +102,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/contatos': {
+      id: '/admin/contatos'
+      path: '/admin/contatos'
+      fullPath: '/admin/contatos'
+      preLoaderRoute: typeof AdminContatosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/contact': {
@@ -117,6 +137,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminContatosRoute: AdminContatosRoute,
   ApiPublicAdminContactsRoute: ApiPublicAdminContactsRoute,
   ApiPublicAdminLoginRoute: ApiPublicAdminLoginRoute,
   ApiPublicContactRoute: ApiPublicContactRoute,
@@ -124,3 +145,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
