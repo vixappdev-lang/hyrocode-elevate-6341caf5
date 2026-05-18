@@ -26,7 +26,7 @@ export function CookieBanner() {
       // Fire a tracking ping right after acceptance
       fetch("/api/public/track", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-hc-consent": "accepted" },
         body: JSON.stringify({
           path: window.location.pathname,
           referrer: document.referrer || "",

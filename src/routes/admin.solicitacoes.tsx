@@ -64,9 +64,9 @@ function SolicitacoesPage() {
       </header>
 
       {loading && !data ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-44 animate-pulse rounded-2xl border border-white/[0.06] bg-card/60" />
+        <div className="overflow-hidden rounded-2xl border border-border bg-card/60">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="h-16 animate-pulse border-b border-border/60 last:border-b-0 bg-foreground/[0.03]" />
           ))}
         </div>
       ) : error ? (
@@ -78,9 +78,7 @@ function SolicitacoesPage() {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {data!.rows.map((row) => <SubmissionCard key={row.id} row={row} />)}
-          </div>
+          <SubmissionList rows={data!.rows} />
           {totalPages > 1 && (
             <nav className="flex items-center justify-center gap-3 pt-4">
               <button
@@ -108,50 +106,58 @@ function SolicitacoesPage() {
   );
 }
 
-function SubmissionCard({ row }: { row: Submission }) {
+function SubmissionList({ rows }: { rows: Submission[] }) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-border bg-card/60 shadow-[var(--shadow-card)]">
+      <div className="grid grid-cols-[1.2fr_.9fr_.7fr_.9fr_auto] gap-4 border-b border-border bg-foreground/[0.025] px-5 py-3 text-[11px] uppercase tracking-[0.14em] text-muted-foreground max-lg:hidden">
+        <span>Nome</span>
+        <span>Contato</span>
+        <span>Estado</span>
+        <span>Recebido</span>
+        <span className="text-right">Ações</span>
+      </div>
+      <ul className="divide-y divide-border">
+        {rows.map((row) => <SubmissionRow key={row.id} row={row} />)}
+      </ul>
+    </div>
+  );
+}
+
+function SubmissionRow({ row }: { row: Submission }) {
   const date = new Date(row.created_at).toLocaleString("pt-BR", {
     day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
   });
   const wa = row.whatsapp.replace(/\D/g, "");
   return (
-    <article
-      className="flex flex-col rounded-2xl border border-white/[0.07] bg-card/60 p-5"
-      style={{ boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.04)" }}
-    >
-      <header className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <h3 className="truncate text-base font-semibold">{row.nome}</h3>
-          <p className="mt-0.5 truncate text-xs text-muted-foreground">{row.email}</p>
-        </div>
-        <span className="shrink-0 rounded-full border border-white/[0.08] px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
+    <li className="grid grid-cols-1 gap-3 px-5 py-4 transition-colors hover:bg-foreground/[0.025] lg:grid-cols-[1.2fr_.9fr_.7fr_.9fr_auto] lg:items-center lg:gap-4">
+      <div className="min-w-0">
+        <h3 className="truncate text-sm font-semibold text-foreground">{row.nome}</h3>
+        {row.descricao && (
+          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground lg:max-w-md">
+            {row.descricao}
+          </p>
+        )}
+      </div>
+      <div className="min-w-0 text-xs text-muted-foreground">
+        <p className="truncate">{row.email}</p>
+        <p className="mt-1 truncate">{row.whatsapp}</p>
+      </div>
+      <div>
+        <span className="inline-flex rounded-full border border-border px-2.5 py-1 text-[10px] uppercase tracking-wider text-muted-foreground">
           {row.estado}
         </span>
-      </header>
-      <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
-        <div>
-          <dt className="text-muted-foreground/70">WhatsApp</dt>
-          <dd className="mt-0.5">{row.whatsapp}</dd>
-        </div>
-        <div>
-          <dt className="text-muted-foreground/70">Recebido</dt>
-          <dd className="mt-0.5">{date}</dd>
-        </div>
-      </dl>
-      {row.descricao && (
-        <p className="mt-4 line-clamp-4 whitespace-pre-wrap rounded-lg border border-white/[0.05] bg-background/40 p-3 text-xs leading-relaxed text-muted-foreground">
-          {row.descricao}
-        </p>
-      )}
-      <div className="mt-5 flex items-center gap-2">
+      </div>
+      <time className="text-xs text-muted-foreground">{date}</time>
+      <div className="flex items-center gap-2 lg:justify-end">
         <a href={`https://wa.me/55${wa}`} target="_blank" rel="noopener"
-           className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] px-3 py-1.5 text-xs hover:border-white/20">
+           className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs hover:border-foreground/20">
           <MessageCircle className="size-3.5" /> WhatsApp
         </a>
         <a href={`mailto:${row.email}`}
-           className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] px-3 py-1.5 text-xs hover:border-white/20">
+           className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs hover:border-foreground/20">
           <Mail className="size-3.5" /> Responder
         </a>
       </div>
-    </article>
+    </li>
   );
 }

@@ -49,7 +49,7 @@ export function Hero() {
         </div>
 
         {/* Composição premium: browser mockup central + 2 cards flutuantes */}
-        <div className="relative mx-auto mt-16 h-[320px] w-full max-w-4xl sm:mt-24 sm:h-[460px] lg:h-[500px]">
+        <div className="relative mx-auto mt-24 h-[320px] w-full max-w-4xl sm:mt-24 sm:h-[460px] lg:h-[500px]">
           {/* Glow ambient */}
           <div
             aria-hidden

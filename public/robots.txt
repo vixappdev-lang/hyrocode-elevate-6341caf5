@@ -13,4 +13,5 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://hyrocode.online/sitemap.xml
+Sitemap: https://www.hyrocode.online/sitemap.xml
+Sitemap: https://www.hyrocode.online/sitemap

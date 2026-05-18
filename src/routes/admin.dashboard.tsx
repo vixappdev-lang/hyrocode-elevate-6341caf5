@@ -12,8 +12,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  BarChart,
-  Bar,
 } from "recharts";
 import { Users, MousePointerClick, Globe, Inbox } from "lucide-react";
 
@@ -24,7 +22,6 @@ export const Route = createFileRoute("/admin/dashboard")({
 type Stats = {
   kpis: { visitors24h: number; visitors7d: number; visitors30d: number; submissions: number };
   series: { date: string; count: number }[];
-  countries: { name: string; value: number }[];
   devices: { name: string; value: number }[];
 };
 
@@ -123,21 +120,6 @@ function DashboardPage() {
           </ul>
         </Card>
       </div>
-
-      <Card className="p-5">
-        <h2 className="text-sm font-medium">Top países (30d)</h2>
-        <div className="mt-4 h-[260px]">
-          <ResponsiveContainer>
-            <BarChart data={data?.countries ?? []}>
-              <CartesianGrid stroke="rgba(255,255,255,0.04)" vertical={false} />
-              <XAxis dataKey="name" tick={{ fill: "#6b7280", fontSize: 11 }} />
-              <YAxis tick={{ fill: "#6b7280", fontSize: 10 }} allowDecimals={false} />
-              <Tooltip contentStyle={{ background: "#0a0a0a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, fontSize: 12 }} />
-              <Bar dataKey="value" fill="#60a5fa" radius={[6, 6, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
     </div>
   );
 }

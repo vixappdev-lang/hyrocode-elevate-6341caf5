@@ -53,11 +53,12 @@ export const Route = createFileRoute("/api/public/track")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const headerConsent = request.headers.get("x-hc-consent") === "accepted";
         const consent = (request.headers.get("cookie") || "")
           .split(";")
           .map((s) => s.trim())
           .find((c) => c.startsWith("hc_consent="));
-        if (!consent || !consent.includes("accepted")) {
+        if (!headerConsent && (!consent || !consent.includes("accepted"))) {
           return Response.json({ ok: true, tracked: false, reason: "no_consent" });
         }
 

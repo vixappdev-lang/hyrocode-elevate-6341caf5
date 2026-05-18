@@ -22,7 +22,7 @@ export const Route = createFileRoute("/api/public/admin-stats")({
         const d7 = new Date(now - 7 * 86400_000).toISOString();
         const d1 = new Date(now - 86400_000).toISOString();
 
-        const [visitors30, visitors7, visitors1, submissions, byDay, byCountry, byDevice] =
+        const [visitors30, visitors7, visitors1, submissions, byDay, byDevice] =
           await Promise.all([
             supabaseAdmin
               .from("visitor_events")
@@ -46,12 +46,6 @@ export const Route = createFileRoute("/api/public/admin-stats")({
               .limit(5000),
             supabaseAdmin
               .from("visitor_events")
-              .select("country")
-              .gte("created_at", d30)
-              .not("country", "is", null)
-              .limit(5000),
-            supabaseAdmin
-              .from("visitor_events")
               .select("device")
               .gte("created_at", d30)
               .limit(5000),
@@ -69,15 +63,6 @@ export const Route = createFileRoute("/api/public/admin-stats")({
         }
         const series = Array.from(dayMap, ([date, count]) => ({ date, count }));
 
-        const countryMap = new Map<string, number>();
-        for (const r of byCountry.data ?? []) {
-          const k = (r as { country: string }).country || "Desconhecido";
-          countryMap.set(k, (countryMap.get(k) ?? 0) + 1);
-        }
-        const countries = Array.from(countryMap, ([name, value]) => ({ name, value }))
-          .sort((a, b) => b.value - a.value)
-          .slice(0, 8);
-
         const deviceMap = new Map<string, number>();
         for (const r of byDevice.data ?? []) {
           const k = (r as { device: string }).device || "desktop";
@@ -94,7 +79,6 @@ export const Route = createFileRoute("/api/public/admin-stats")({
             submissions: submissions.count ?? 0,
           },
           series,
-          countries,
           devices,
         });
       },
