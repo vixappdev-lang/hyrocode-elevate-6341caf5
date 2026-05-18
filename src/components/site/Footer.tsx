@@ -34,7 +34,7 @@ export function Footer() {
             <img
               src={logo}
               alt="HyroCode"
-              className="h-12 w-auto md:h-14"
+              className="h-16 md:h-20 w-auto -ml-2 select-none"
               draggable={false}
             />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-muted-foreground">
