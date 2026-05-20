@@ -13,6 +13,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SitemapRouteImport } from './routes/sitemap'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CheckoutPlanRouteImport } from './routes/checkout.$plan'
 import { Route as AdminSolicitacoesRouteImport } from './routes/admin.solicitacoes'
 import { Route as AdminRastreioRouteImport } from './routes/admin.rastreio'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
@@ -45,6 +46,11 @@ const AdminRoute = AdminRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutPlanRoute = CheckoutPlanRouteImport.update({
+  id: '/checkout/$plan',
+  path: '/checkout/$plan',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSolicitacoesRoute = AdminSolicitacoesRouteImport.update({
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/rastreio': typeof AdminRastreioRoute
   '/admin/solicitacoes': typeof AdminSolicitacoesRoute
+  '/checkout/$plan': typeof CheckoutPlanRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
   '/api/public/admin-settings': typeof ApiPublicAdminSettingsRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/rastreio': typeof AdminRastreioRoute
   '/admin/solicitacoes': typeof AdminSolicitacoesRoute
+  '/checkout/$plan': typeof CheckoutPlanRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
   '/api/public/admin-settings': typeof ApiPublicAdminSettingsRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/rastreio': typeof AdminRastreioRoute
   '/admin/solicitacoes': typeof AdminSolicitacoesRoute
+  '/checkout/$plan': typeof CheckoutPlanRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
   '/api/public/admin-settings': typeof ApiPublicAdminSettingsRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/rastreio'
     | '/admin/solicitacoes'
+    | '/checkout/$plan'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
     | '/api/public/admin-settings'
@@ -201,6 +211,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/rastreio'
     | '/admin/solicitacoes'
+    | '/checkout/$plan'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
     | '/api/public/admin-settings'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/rastreio'
     | '/admin/solicitacoes'
+    | '/checkout/$plan'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
     | '/api/public/admin-settings'
@@ -236,6 +248,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   SitemapRoute: typeof SitemapRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  CheckoutPlanRoute: typeof CheckoutPlanRoute
   ApiPublicAdminContactsRoute: typeof ApiPublicAdminContactsRoute
   ApiPublicAdminLoginRoute: typeof ApiPublicAdminLoginRoute
   ApiPublicAdminSettingsRoute: typeof ApiPublicAdminSettingsRoute
@@ -275,6 +288,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout/$plan': {
+      id: '/checkout/$plan'
+      path: '/checkout/$plan'
+      fullPath: '/checkout/$plan'
+      preLoaderRoute: typeof CheckoutPlanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/solicitacoes': {
@@ -392,6 +412,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   SitemapRoute: SitemapRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  CheckoutPlanRoute: CheckoutPlanRoute,
   ApiPublicAdminContactsRoute: ApiPublicAdminContactsRoute,
   ApiPublicAdminLoginRoute: ApiPublicAdminLoginRoute,
   ApiPublicAdminSettingsRoute: ApiPublicAdminSettingsRoute,

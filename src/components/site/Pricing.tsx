@@ -183,8 +183,9 @@ export function Pricing() {
               {p.cta.type === "link" ? (
                 <a
                   href={p.cta.href}
-                  target="_blank"
-                  rel="noopener"
+                  {...(p.cta.href?.startsWith("http")
+                    ? { target: "_blank", rel: "noopener" }
+                    : {})}
                   className={`btn-shine mt-8 inline-flex items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] ${
                     p.highlighted
                       ? "bg-foreground text-background shadow-[var(--shadow-elegant)]"
