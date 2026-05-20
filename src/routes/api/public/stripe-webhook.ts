@@ -16,7 +16,7 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
         if (!signature) return new Response("Missing signature", { status: 400 });
 
         const body = await request.text();
-        const stripe = new Stripe(secret, { apiVersion: "2025-09-30.clover" });
+        const stripe = new Stripe(secret, { apiVersion: "2026-04-22.dahlia" });
 
         let event: Stripe.Event;
         try {

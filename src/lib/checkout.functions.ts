@@ -44,7 +44,7 @@ const CreatePixSchema = z.object({
 function getStripe(): Stripe {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) throw new Error("STRIPE_SECRET_KEY não configurada.");
-  return new Stripe(key, { apiVersion: "2025-09-30.clover" });
+  return new Stripe(key, { apiVersion: "2026-04-22.dahlia" });
 }
 
 export const createPixOrder = createServerFn({ method: "POST" })
