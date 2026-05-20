@@ -44,6 +44,8 @@ function getStripe(): Stripe {
   return new Stripe(key, { apiVersion: "2026-04-22.dahlia" });
 }
 
+const SlugSchema = z.string().regex(/^[A-Za-z0-9]{5,10}$/, "Identificador inválido");
+
 // 1. Criar pedido em rascunho (chamado quando clica no plano)
 const StartSchema = z.object({
   planKey: z.enum(Object.keys(PLANS) as [PlanKey, ...PlanKey[]]),
@@ -64,31 +66,31 @@ export const startCheckout = createServerFn({ method: "POST" })
         customer_email: null,
         customer_cpf: null,
       })
-      .select("id")
+      .select("slug")
       .single();
-    if (error || !row) {
+    if (error || !row?.slug) {
       console.error("startCheckout insert error", error);
       throw new Error("Não foi possível iniciar o checkout.");
     }
-    return { orderId: row.id as string };
+    return { slug: row.slug as string };
   });
 
 // 2. Ler dados de exibição do pedido (capa do checkout)
-const GetSchema = z.object({ orderId: z.string().uuid() });
+const GetSchema = z.object({ slug: SlugSchema });
 
 export const getCheckoutOrder = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => GetSchema.parse(input))
   .handler(async ({ data }) => {
     const { data: row, error } = await supabaseAdmin
       .from("pix_orders")
-      .select("id, plan_key, amount_cents, status, pix_qr_data, pix_qr_image_url, expires_at, customer_email")
-      .eq("id", data.orderId)
+      .select("id, slug, plan_key, amount_cents, status, pix_qr_data, pix_qr_image_url, expires_at, customer_email")
+      .eq("slug", data.slug)
       .maybeSingle();
     if (error || !row) throw new Error("Pedido não encontrado.");
     const plan = PLANS[row.plan_key as PlanKey];
     if (!plan) throw new Error("Plano inválido.");
     return {
-      orderId: row.id as string,
+      slug: row.slug as string,
       status: row.status as "draft" | "pending" | "paid" | "expired" | "failed",
       plan: {
         key: plan.key,
@@ -105,7 +107,7 @@ export const getCheckoutOrder = createServerFn({ method: "POST" })
 
 // 3. Gerar Pix (após preencher formulário)
 const GeneratePixSchema = z.object({
-  orderId: z.string().uuid(),
+  slug: SlugSchema,
   name: z.string().trim().min(2).max(120),
   email: z.string().trim().email().max(255),
   cpf: z.string().trim().min(11).max(14).refine(isValidCPF, "CPF inválido"),
@@ -116,12 +118,11 @@ export const generatePix = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { data: existing, error: fetchErr } = await supabaseAdmin
       .from("pix_orders")
-      .select("id, plan_key, amount_cents, status, pix_qr_data, pix_qr_image_url, expires_at")
-      .eq("id", data.orderId)
+      .select("id, slug, plan_key, amount_cents, status, pix_qr_data, pix_qr_image_url, expires_at")
+      .eq("slug", data.slug)
       .maybeSingle();
     if (fetchErr || !existing) throw new Error("Pedido não encontrado.");
 
-    // Se já tem QR pendente, devolve o mesmo
     if (existing.status === "pending" && existing.pix_qr_data && existing.pix_qr_image_url) {
       return {
         qrImage: existing.pix_qr_image_url,
@@ -144,6 +145,7 @@ export const generatePix = createServerFn({ method: "POST" })
       receipt_email: data.email,
       metadata: {
         order_id: existing.id,
+        order_slug: existing.slug,
         plan_key: plan.key,
         customer_name: data.name,
         customer_cpf: cpfDigits,
@@ -196,7 +198,7 @@ export const getOrderStatus = createServerFn({ method: "POST" })
     const { data: row, error } = await supabaseAdmin
       .from("pix_orders")
       .select("status, expires_at")
-      .eq("id", data.orderId)
+      .eq("slug", data.slug)
       .maybeSingle();
     if (error || !row) throw new Error("Pedido não encontrado.");
     return {

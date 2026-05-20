@@ -105,6 +105,15 @@
 
   --glass-bg: color-mix(in oklab, var(--background) 60%, transparent);
   --glass-border: color-mix(in oklab, white 8%, transparent);
+
+  /* Checkout surfaces — elevated, lighter than the site, calm and pro */
+  --checkout-bg: oklch(0.19 0.02 255);
+  --checkout-surface: oklch(0.24 0.022 255);
+  --checkout-surface-2: oklch(0.27 0.023 255);
+  --checkout-border: oklch(1 0 0 / 0.10);
+  --checkout-border-strong: oklch(1 0 0 / 0.18);
+  --checkout-input: oklch(0.21 0.022 255);
+  --checkout-accent: var(--primary);
 }
 
 @layer base {

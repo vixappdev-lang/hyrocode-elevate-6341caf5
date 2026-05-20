@@ -12,7 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SitemapRouteImport } from './routes/sitemap'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as CheckoutOrderIdRouteImport } from './routes/checkout.$orderId'
+import { Route as CheckoutSlugRouteImport } from './routes/checkout.$slug'
 import { Route as ApiPublicTrackRouteImport } from './routes/api/public/track'
 import { Route as ApiPublicTelegramWebhookRouteImport } from './routes/api/public/telegram-webhook'
 import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
@@ -33,9 +33,9 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CheckoutOrderIdRoute = CheckoutOrderIdRouteImport.update({
-  id: '/checkout/$orderId',
-  path: '/checkout/$orderId',
+const CheckoutSlugRoute = CheckoutSlugRouteImport.update({
+  id: '/checkout/$slug',
+  path: '/checkout/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicTrackRoute = ApiPublicTrackRouteImport.update({
@@ -64,7 +64,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/sitemap': typeof SitemapRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/checkout/$orderId': typeof CheckoutOrderIdRoute
+  '/checkout/$slug': typeof CheckoutSlugRoute
   '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/telegram-webhook': typeof ApiPublicTelegramWebhookRoute
@@ -74,7 +74,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sitemap': typeof SitemapRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/checkout/$orderId': typeof CheckoutOrderIdRoute
+  '/checkout/$slug': typeof CheckoutSlugRoute
   '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/telegram-webhook': typeof ApiPublicTelegramWebhookRoute
@@ -85,7 +85,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/sitemap': typeof SitemapRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/checkout/$orderId': typeof CheckoutOrderIdRoute
+  '/checkout/$slug': typeof CheckoutSlugRoute
   '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/telegram-webhook': typeof ApiPublicTelegramWebhookRoute
@@ -97,7 +97,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sitemap'
     | '/sitemap.xml'
-    | '/checkout/$orderId'
+    | '/checkout/$slug'
     | '/api/public/contact'
     | '/api/public/stripe-webhook'
     | '/api/public/telegram-webhook'
@@ -107,7 +107,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sitemap'
     | '/sitemap.xml'
-    | '/checkout/$orderId'
+    | '/checkout/$slug'
     | '/api/public/contact'
     | '/api/public/stripe-webhook'
     | '/api/public/telegram-webhook'
@@ -117,7 +117,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sitemap'
     | '/sitemap.xml'
-    | '/checkout/$orderId'
+    | '/checkout/$slug'
     | '/api/public/contact'
     | '/api/public/stripe-webhook'
     | '/api/public/telegram-webhook'
@@ -128,7 +128,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SitemapRoute: typeof SitemapRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  CheckoutOrderIdRoute: typeof CheckoutOrderIdRoute
+  CheckoutSlugRoute: typeof CheckoutSlugRoute
   ApiPublicContactRoute: typeof ApiPublicContactRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   ApiPublicTelegramWebhookRoute: typeof ApiPublicTelegramWebhookRoute
@@ -158,11 +158,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/checkout/$orderId': {
-      id: '/checkout/$orderId'
-      path: '/checkout/$orderId'
-      fullPath: '/checkout/$orderId'
-      preLoaderRoute: typeof CheckoutOrderIdRouteImport
+    '/checkout/$slug': {
+      id: '/checkout/$slug'
+      path: '/checkout/$slug'
+      fullPath: '/checkout/$slug'
+      preLoaderRoute: typeof CheckoutSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/track': {
@@ -200,7 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SitemapRoute: SitemapRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  CheckoutOrderIdRoute: CheckoutOrderIdRoute,
+  CheckoutSlugRoute: CheckoutSlugRoute,
   ApiPublicContactRoute: ApiPublicContactRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   ApiPublicTelegramWebhookRoute: ApiPublicTelegramWebhookRoute,
