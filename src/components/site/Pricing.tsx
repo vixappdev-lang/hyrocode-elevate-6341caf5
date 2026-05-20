@@ -74,8 +74,8 @@ export function Pricing() {
   const onCheckout = async (planKey: "landing-premium") => {
     setLoadingKey(planKey);
     try {
-      const { orderId } = await startFn({ data: { planKey } });
-      await navigate({ to: "/checkout/$orderId", params: { orderId } });
+      const { slug } = await startFn({ data: { planKey } });
+      await navigate({ to: "/checkout/$slug", params: { slug } });
     } catch (e) {
       console.error(e);
       setLoadingKey(null);
