@@ -44,6 +44,60 @@ export type Database = {
         }
         Relationships: []
       }
+      pix_orders: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: string
+          customer_about: string | null
+          customer_cpf: string
+          customer_email: string
+          customer_name: string
+          expires_at: string | null
+          id: string
+          pix_qr_data: string | null
+          pix_qr_image_url: string | null
+          plan_key: string
+          status: string
+          stripe_payment_intent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          currency?: string
+          customer_about?: string | null
+          customer_cpf: string
+          customer_email: string
+          customer_name: string
+          expires_at?: string | null
+          id?: string
+          pix_qr_data?: string | null
+          pix_qr_image_url?: string | null
+          plan_key: string
+          status?: string
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          customer_about?: string | null
+          customer_cpf?: string
+          customer_email?: string
+          customer_name?: string
+          expires_at?: string | null
+          id?: string
+          pix_qr_data?: string | null
+          pix_qr_image_url?: string | null
+          plan_key?: string
+          status?: string
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           key: string
