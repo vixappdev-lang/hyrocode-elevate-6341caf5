@@ -34,7 +34,7 @@ type Props = {
 };
 
 const inputCls =
-  "h-11 w-full rounded-xl border border-white/10 bg-background/60 px-4 text-base sm:text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/60";
+  "h-12 w-full rounded-xl border border-white/10 bg-background/60 px-3.5 text-[16px] sm:text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/60";
 
 export function ContactModal({ open, onOpenChange }: Props) {
   const [submitted, setSubmitted] = useState(false);
