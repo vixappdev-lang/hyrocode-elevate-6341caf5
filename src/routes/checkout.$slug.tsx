@@ -3,9 +3,9 @@ import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import {
   Loader2, Lock, ShieldCheck, Copy, CheckCircle2, ArrowLeft, QrCode, Clock,
-  BadgeCheck, ChevronDown, ChevronUp,
+  BadgeCheck, ChevronDown, ChevronUp, User, Mail, Phone, FileText, HelpCircle,
 } from "lucide-react";
-import logo from "@/assets/hyrocode-logo-trim.png";
+import logoMark from "@/assets/hyrocode-mark.jpg";
 import { generatePix, getCheckoutOrder, getOrderStatus } from "@/lib/checkout.functions";
 
 export const Route = createFileRoute("/checkout/$slug")({
@@ -29,6 +29,12 @@ function maskCPF(v: string) {
     .replace(/(\d{3})(\d)/, "$1.$2")
     .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 }
+function maskPhone(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 11);
+  if (d.length <= 2) return d;
+  if (d.length <= 7) return `(${d.slice(0,2)}) ${d.slice(2)}`;
+  return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+}
 
 type OrderData = Awaited<ReturnType<typeof getCheckoutOrder>>;
 
@@ -51,23 +57,14 @@ function CheckoutPage() {
   if (!order) return <CenterMsg title="Carregando…" message="Buscando seu pedido com segurança." spinner />;
 
   return (
-    <div
-      className="min-h-screen text-foreground"
-      style={{ background: "var(--checkout-bg)" }}
-    >
+    <div className="min-h-screen text-foreground" style={{ background: "var(--checkout-bg)" }}>
       <TrustBar />
-      <TopBar />
-      <main className="mx-auto max-w-6xl px-4 sm:px-6 pt-5 sm:pt-8 pb-28 sm:pb-12">
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
+      <TopBar slug={order.slug} />
+      <main className="mx-auto max-w-6xl px-4 sm:px-6 pt-5 sm:pt-8 pb-16 sm:pb-12">
+        <div className="mb-4 sm:mb-5 flex items-center justify-between gap-3">
+          <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="size-3.5" /> Voltar ao site
           </Link>
-          <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
-            Pedido <code className="font-mono text-foreground/80">{order.slug}</code>
-          </span>
         </div>
         <Inner order={order} onUpdate={setOrder} />
       </main>
@@ -78,10 +75,7 @@ function CheckoutPage() {
 
 function CenterMsg({ title, message, spinner }: { title: string; message: string; spinner?: boolean }) {
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-6"
-      style={{ background: "var(--checkout-bg)" }}
-    >
+    <div className="min-h-screen flex items-center justify-center p-6" style={{ background: "var(--checkout-bg)" }}>
       <div className="max-w-sm text-center">
         {spinner && <Loader2 className="mx-auto mb-4 size-6 animate-spin text-muted-foreground" />}
         <h1 className="font-display text-xl text-foreground">{title}</h1>
@@ -95,10 +89,7 @@ function CenterMsg({ title, message, spinner }: { title: string; message: string
 /* -------- chrome -------- */
 function TrustBar() {
   return (
-    <div
-      className="w-full border-b"
-      style={{ borderColor: "var(--checkout-border)", background: "color-mix(in oklab, white 3%, transparent)" }}
-    >
+    <div className="w-full border-b" style={{ borderColor: "var(--checkout-border)", background: "color-mix(in oklab, white 3%, transparent)" }}>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-[11px] sm:text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1.5"><Lock className="size-3.5 text-foreground/70" /> Ambiente 100% seguro</span>
         <span className="hidden sm:inline-flex items-center gap-1.5"><ShieldCheck className="size-3.5 text-foreground/70" /> SSL 256-bit</span>
@@ -109,18 +100,17 @@ function TrustBar() {
   );
 }
 
-function TopBar() {
+function TopBar({ slug }: { slug: string }) {
   return (
     <header className="border-b" style={{ borderColor: "var(--checkout-border)" }}>
-      <div className="mx-auto max-w-6xl flex items-center justify-between gap-4 px-4 sm:px-6 py-4">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="HyroCode" className="h-7 sm:h-8 w-auto" draggable={false} />
+      <div className="mx-auto max-w-6xl flex items-center justify-between gap-4 px-4 sm:px-6 py-3.5">
+        <Link to="/" className="flex items-center gap-2.5">
+          <img src={logoMark} alt="HyroCode" className="h-8 w-8 rounded-md object-cover" draggable={false} />
+          <span className="font-display text-base font-semibold tracking-tight text-foreground">HyroCode</span>
         </Link>
-        <div className="hidden sm:flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] text-muted-foreground"
-          style={{ borderColor: "var(--checkout-border)" }}>
-          <ShieldCheck className="size-3.5 text-emerald-400" />
-          <span>Compra segura</span>
-        </div>
+        <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
+          Pedido <code className="font-mono text-foreground/80">#{slug}</code>
+        </span>
       </div>
     </header>
   );
@@ -154,14 +144,14 @@ function Inner({ order, onUpdate }: { order: OrderData; onUpdate: (o: OrderData)
   );
 
   return (
-    <div className="space-y-5 sm:space-y-7">
+    <div className="space-y-5 sm:space-y-6">
       <Stepper step={step} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-5 lg:gap-7">
-        <section className="order-2 lg:order-1">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5 lg:gap-6 items-start">
+        <section className="order-2 lg:order-1 min-w-0">
           {step === "form" && (
             <CheckoutForm
-              slug={order.slug}
+              order={order}
               onCreated={(p) => { setPixData(p); setStep("pix"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
             />
           )}
@@ -192,26 +182,24 @@ function Stepper({ step }: { step: "form" | "pix" | "paid" }) {
   ];
   const activeIndex = items.findIndex((i) => i.key === step);
   return (
-    <ol className="flex items-center gap-2 sm:gap-3 text-[11px] sm:text-xs">
+    <ol className="flex items-center gap-2 sm:gap-3 text-[11px] sm:text-xs overflow-x-auto">
       {items.map((it, idx) => {
         const done = idx < activeIndex;
         const active = idx === activeIndex;
         return (
-          <li key={it.key} className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <li key={it.key} className="flex items-center gap-2 sm:gap-3 min-w-0 shrink-0">
             <span
               className={[
                 "flex size-6 sm:size-7 shrink-0 items-center justify-center rounded-full border text-[11px] font-semibold",
                 done ? "border-emerald-400/40 bg-emerald-400/15 text-emerald-300" :
-                active ? "border-primary/60 bg-primary/20 text-foreground" :
+                active ? "border-primary/60 bg-primary/25 text-foreground" :
                 "border-white/10 bg-white/[0.04] text-muted-foreground",
               ].join(" ")}
             >
               {done ? <CheckCircle2 className="size-3.5" /> : idx + 1}
             </span>
             <span className={active ? "text-foreground font-medium" : "text-muted-foreground"}>{it.label}</span>
-            {idx < items.length - 1 && (
-              <span className="mx-1 sm:mx-2 hidden sm:block h-px w-8 bg-white/10" />
-            )}
+            {idx < items.length - 1 && <span className="mx-1 sm:mx-2 hidden sm:block h-px w-8 bg-white/10" />}
           </li>
         );
       })}
@@ -219,39 +207,54 @@ function Stepper({ step }: { step: "form" | "pix" | "paid" }) {
   );
 }
 
-/* -------- summary -------- */
+/* -------- right summary -------- */
 function OrderSummary({ plan }: { plan: OrderData["plan"] }) {
   const [open, setOpen] = useState(false);
+  const installments = formatBRL(Math.round(plan.amount_cents / 12));
 
   return (
     <div
-      className="rounded-2xl border lg:sticky lg:top-6"
-      style={{
-        background: "var(--checkout-surface)",
-        borderColor: "var(--checkout-border)",
-        boxShadow: "var(--shadow-card)",
-      }}
+      className="rounded-2xl border lg:sticky lg:top-6 overflow-hidden"
+      style={{ background: "var(--checkout-surface)", borderColor: "var(--checkout-border)", boxShadow: "var(--shadow-card)" }}
     >
-      <div className="flex items-start gap-3 p-5 sm:p-6">
-        <div
-          className="grid size-11 shrink-0 place-items-center rounded-xl border"
-          style={{ background: "var(--checkout-surface-2)", borderColor: "var(--checkout-border)" }}
-        >
-          <img src={logo} alt="" className="h-6 w-auto opacity-90" />
+      {/* Green secure header — calm, no neon */}
+      <div
+        className="flex items-center justify-center gap-2 py-2.5 text-[12px] font-semibold text-emerald-50"
+        style={{ background: "linear-gradient(180deg, oklch(0.52 0.13 160) 0%, oklch(0.46 0.13 160) 100%)" }}
+      >
+        <ShieldCheck className="size-4" /> Compra segura
+      </div>
+
+      <div className="flex items-start gap-3 p-5">
+        <div className="grid size-12 shrink-0 place-items-center rounded-xl overflow-hidden border" style={{ borderColor: "var(--checkout-border)" }}>
+          <img src={logoMark} alt="" className="size-12 object-cover" />
         </div>
         <div className="min-w-0">
-          <p className="font-display text-base font-semibold text-foreground">{plan.label}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">Produto digital · entrega imediata após pagamento</p>
+          <p className="font-display text-[15px] font-semibold text-foreground leading-tight">{plan.label}</p>
+          <p className="mt-1 text-[11px] text-muted-foreground">
+            Precisa de ajuda?{" "}
+            <a href="mailto:contato@hyrocode.online" className="text-primary hover:underline">Fale com o vendedor</a>
+          </p>
         </div>
       </div>
 
-      <div className="border-t px-5 sm:px-6 py-4" style={{ borderColor: "var(--checkout-border)" }}>
+      <div className="border-t px-5 py-4" style={{ borderColor: "var(--checkout-border)" }}>
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-muted-foreground">Total</span>
+          <span className="font-display text-xl font-bold text-foreground">{formatBRL(plan.amount_cents)}</span>
+        </div>
+        <p className="mt-1 text-right text-[11px] text-muted-foreground">
+          ou em até <span className="text-foreground/90">12× de {installments}</span>
+        </p>
+      </div>
+
+      <div className="border-t px-5 py-3.5" style={{ borderColor: "var(--checkout-border)" }}>
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="flex w-full items-center justify-between text-left lg:cursor-default lg:pointer-events-none"
+          className="flex w-full items-center justify-between text-left lg:cursor-default"
         >
-          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             O que está incluso
           </span>
           <span className="lg:hidden text-muted-foreground">
@@ -260,7 +263,7 @@ function OrderSummary({ plan }: { plan: OrderData["plan"] }) {
         </button>
         <ul className={`mt-3 space-y-2 ${open ? "block" : "hidden"} lg:block`}>
           {plan.bullets.map((b) => (
-            <li key={b} className="flex items-start gap-2 text-xs text-foreground/80">
+            <li key={b} className="flex items-start gap-2 text-xs text-foreground/85">
               <CheckCircle2 className="size-3.5 mt-0.5 text-emerald-400/90 shrink-0" />
               <span className="leading-relaxed">{b}</span>
             </li>
@@ -268,23 +271,8 @@ function OrderSummary({ plan }: { plan: OrderData["plan"] }) {
         </ul>
       </div>
 
-      <div className="border-t px-5 sm:px-6 py-5" style={{ borderColor: "var(--checkout-border)" }}>
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>Subtotal</span>
-          <span>{formatBRL(plan.amount_cents)}</span>
-        </div>
-        <div className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
-          <span>Pagamento</span>
-          <span className="text-foreground/80">Pix · à vista</span>
-        </div>
-        <div className="mt-4 flex items-end justify-between border-t pt-4" style={{ borderColor: "var(--checkout-border)" }}>
-          <span className="text-xs text-muted-foreground">Total</span>
-          <span className="font-display text-2xl font-bold text-foreground">{formatBRL(plan.amount_cents)}</span>
-        </div>
-      </div>
-
       <div
-        className="rounded-b-2xl px-5 sm:px-6 py-4 grid grid-cols-3 gap-2 text-[10px] text-muted-foreground border-t"
+        className="px-5 py-4 grid grid-cols-3 gap-2 text-[10px] text-muted-foreground border-t"
         style={{ borderColor: "var(--checkout-border)", background: "var(--checkout-surface-2)" }}
       >
         {[
@@ -304,28 +292,41 @@ function OrderSummary({ plan }: { plan: OrderData["plan"] }) {
 
 /* -------- form -------- */
 const fieldCls =
-  "h-12 w-full rounded-xl border px-4 text-[16px] sm:text-sm text-foreground placeholder:text-muted-foreground/50 outline-none transition-all focus:border-primary/60 focus:ring-2 focus:ring-primary/25";
+  "h-12 w-full rounded-xl border pl-10 pr-3 text-[16px] sm:text-sm text-foreground placeholder:text-muted-foreground/50 outline-none transition-all focus:border-primary/60 focus:ring-2 focus:ring-primary/25";
+const fieldStyle: React.CSSProperties = {
+  background: "var(--checkout-input)",
+  borderColor: "var(--checkout-border-strong)",
+};
 
-function CheckoutForm({ slug, onCreated }: {
-  slug: string;
+function InputIcon({ Icon }: { Icon: typeof User }) {
+  return (
+    <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/70">
+      <Icon className="size-4" />
+    </span>
+  );
+}
+
+function CheckoutForm({ order, onCreated }: {
+  order: OrderData;
   onCreated: (p: { qrImage: string; qrCopyPaste: string; expiresAt: string | null }) => void;
 }) {
   const createFn = useServerFn(generatePix);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [form, setForm] = useState({ name: "", email: "", cpf: "" });
+  const [showWhy, setShowWhy] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", cpf: "", phone: "" });
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
     if (!form.name || !form.email || !form.cpf) {
-      setError("Preencha todos os campos para gerar seu Pix.");
+      setError("Preencha nome, email e CPF para gerar seu Pix.");
       return;
     }
     setLoading(true);
     try {
       const result = await createFn({
-        data: { slug, name: form.name, email: form.email, cpf: form.cpf },
+        data: { slug: order.slug, name: form.name, email: form.email, cpf: form.cpf },
       });
       onCreated(result);
     } catch (err) {
@@ -337,81 +338,157 @@ function CheckoutForm({ slug, onCreated }: {
 
   return (
     <div
-      className="rounded-2xl border p-5 sm:p-7"
-      style={{
-        background: "var(--checkout-surface)",
-        borderColor: "var(--checkout-border)",
-        boxShadow: "var(--shadow-card)",
-      }}
+      className="rounded-2xl border overflow-hidden"
+      style={{ background: "var(--checkout-surface)", borderColor: "var(--checkout-border)", boxShadow: "var(--shadow-card)" }}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h1 className="font-display text-xl sm:text-2xl font-semibold text-foreground">Seus dados</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Usamos seus dados apenas para emitir o Pix e o comprovante.
+      {/* product header inside left card */}
+      <div className="flex items-center gap-3 p-5 sm:p-6 border-b" style={{ borderColor: "var(--checkout-border)", background: "var(--checkout-surface-2)" }}>
+        <img src={logoMark} alt="" className="size-12 rounded-xl object-cover border" style={{ borderColor: "var(--checkout-border)" }} />
+        <div className="min-w-0">
+          <h1 className="font-display text-base sm:text-lg font-semibold text-foreground leading-tight">{order.plan.label}</h1>
+          <p className="mt-1 text-[12px] text-foreground/80">
+            <span className="font-medium">{formatBRL(order.plan.amount_cents)}</span>
+            <span className="text-muted-foreground"> · à vista no Pix</span>
           </p>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-wider text-muted-foreground"
-          style={{ borderColor: "var(--checkout-border)", background: "var(--checkout-surface-2)" }}>
-          <QrCode className="size-3" /> Pix
-        </span>
       </div>
 
-      <form onSubmit={submit} className="mt-6 space-y-4">
-        <Field label="Nome completo">
-          <input
-            required maxLength={120} autoComplete="name"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            placeholder="Como aparece no seu documento"
-            className={fieldCls}
-            style={{ background: "var(--checkout-input)", borderColor: "var(--checkout-border-strong)" }}
-          />
-        </Field>
+      <div className="p-5 sm:p-7">
+        {/* Seus dados */}
+        <div className="flex items-center gap-2">
+          <span className="grid size-6 place-items-center rounded-full bg-primary/15 text-primary text-[11px] font-semibold">1</span>
+          <h2 className="font-display text-[15px] font-semibold text-foreground">Seus dados</h2>
+        </div>
 
-        <Field label="Email">
-          <input
-            required type="email" maxLength={255} inputMode="email" autoComplete="email"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-            placeholder="seuemail@exemplo.com"
-            className={fieldCls}
-            style={{ background: "var(--checkout-input)", borderColor: "var(--checkout-border-strong)" }}
-          />
-        </Field>
+        <form onSubmit={submit} className="mt-5 space-y-4">
+          <Field label="Nome completo *">
+            <div className="relative">
+              <InputIcon Icon={User} />
+              <input
+                required maxLength={120} autoComplete="name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="Como aparece no seu documento"
+                className={fieldCls} style={fieldStyle}
+              />
+            </div>
+          </Field>
 
-        <Field label="CPF">
-          <input
-            required inputMode="numeric" maxLength={14} autoComplete="off"
-            value={form.cpf}
-            onChange={(e) => setForm({ ...form, cpf: maskCPF(e.target.value) })}
-            placeholder="000.000.000-00"
-            className={fieldCls}
-            style={{ background: "var(--checkout-input)", borderColor: "var(--checkout-border-strong)" }}
-          />
-        </Field>
+          <Field label="Email *">
+            <div className="relative">
+              <InputIcon Icon={Mail} />
+              <input
+                required type="email" maxLength={255} inputMode="email" autoComplete="email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                placeholder="seuemail@exemplo.com"
+                className={fieldCls} style={fieldStyle}
+              />
+            </div>
+          </Field>
 
-        {error && (
-          <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive-foreground">
-            {error}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Field label="CPF *">
+              <div className="relative">
+                <InputIcon Icon={FileText} />
+                <input
+                  required inputMode="numeric" maxLength={14} autoComplete="off"
+                  value={form.cpf}
+                  onChange={(e) => setForm({ ...form, cpf: maskCPF(e.target.value) })}
+                  placeholder="000.000.000-00"
+                  className={fieldCls} style={fieldStyle}
+                />
+              </div>
+            </Field>
+            <Field label="Celular">
+              <div className="relative">
+                <InputIcon Icon={Phone} />
+                <input
+                  inputMode="tel" maxLength={16} autoComplete="tel"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: maskPhone(e.target.value) })}
+                  placeholder="(00) 00000-0000"
+                  className={fieldCls} style={fieldStyle}
+                />
+              </div>
+            </Field>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowWhy((v) => !v)}
+            className="inline-flex items-center gap-1.5 text-[12px] text-primary hover:underline"
+          >
+            <HelpCircle className="size-3.5" /> Porque pedimos esses dados?
+          </button>
+          {showWhy && (
+            <p className="text-[11px] text-muted-foreground leading-relaxed">
+              Usamos seus dados apenas para emitir o Pix, enviar o comprovante por email e iniciar a entrega do seu projeto. Não compartilhamos com terceiros (LGPD).
+            </p>
+          )}
+
+          {/* Pagamento */}
+          <div className="pt-4 mt-2 border-t" style={{ borderColor: "var(--checkout-border)" }}>
+            <div className="flex items-center gap-2">
+              <span className="grid size-6 place-items-center rounded-full bg-primary/15 text-primary text-[11px] font-semibold">2</span>
+              <h2 className="font-display text-[15px] font-semibold text-foreground">Forma de pagamento</h2>
+            </div>
+
+            <div className="mt-4">
+              <div
+                className="flex items-center justify-between gap-3 rounded-xl border p-4"
+                style={{ borderColor: "var(--primary)", background: "color-mix(in oklab, var(--primary) 8%, transparent)" }}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="grid size-10 place-items-center rounded-lg" style={{ background: "var(--checkout-surface-2)" }}>
+                    <QrCode className="size-5 text-foreground" />
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Pix</p>
+                    <p className="text-[11px] text-muted-foreground">Aprovação imediata · sem taxas</p>
+                  </div>
+                </div>
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-emerald-300">
+                  <CheckCircle2 className="size-3" /> Recomendado
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Resumo */}
+          <div className="rounded-xl border p-4" style={{ borderColor: "var(--checkout-border)", background: "var(--checkout-surface-2)" }}>
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span>{order.plan.label}</span>
+              <span className="text-foreground">{formatBRL(order.plan.amount_cents)}</span>
+            </div>
+            <div className="mt-2 flex items-center justify-between border-t pt-2 text-sm font-semibold" style={{ borderColor: "var(--checkout-border)" }}>
+              <span className="text-foreground">Total</span>
+              <span className="text-foreground">{formatBRL(order.plan.amount_cents)}</span>
+            </div>
+          </div>
+
+          {error && (
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive-foreground">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-sm font-semibold tracking-wide text-background shadow-[var(--shadow-elegant)] transition-all hover:translate-y-[-1px] disabled:cursor-not-allowed disabled:opacity-70"
+            style={{ background: "var(--gradient-primary)" }}
+          >
+            {loading
+              ? (<><Loader2 className="size-4 animate-spin" /> Gerando Pix…</>)
+              : (<><QrCode className="size-4" /> Pagar com Pix</>)}
+          </button>
+
+          <p className="text-center text-[11px] text-muted-foreground">
+            Ambiente protegido pela <span className="text-foreground/80">Stripe</span> · Pagamento processado com segurança.
           </p>
-        )}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-sm font-semibold tracking-wide text-background shadow-[var(--shadow-elegant)] transition-all hover:translate-y-[-1px] disabled:cursor-not-allowed disabled:opacity-70"
-          style={{ background: "var(--gradient-primary)" }}
-        >
-          {loading
-            ? (<><Loader2 className="size-4 animate-spin" /> Gerando Pix…</>)
-            : (<><QrCode className="size-4" /> Gerar Pix agora</>)}
-        </button>
-
-        <p className="text-center text-[11px] text-muted-foreground">
-          Ao continuar você concorda com nossa Política de Privacidade (LGPD).
-        </p>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
@@ -485,11 +562,7 @@ function PixDisplay({
   return (
     <div
       className="rounded-2xl border p-5 sm:p-7"
-      style={{
-        background: "var(--checkout-surface)",
-        borderColor: "var(--checkout-border)",
-        boxShadow: "var(--shadow-card)",
-      }}
+      style={{ background: "var(--checkout-surface)", borderColor: "var(--checkout-border)", boxShadow: "var(--shadow-card)" }}
     >
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -508,7 +581,7 @@ function PixDisplay({
 
       <div className="mt-6 flex flex-col items-center">
         <div className="rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]">
-          <img src={pix.qrImage} alt="QR Code Pix" className="block w-[220px] h-[220px] sm:w-[260px] sm:h-[260px]" />
+          <img src={pix.qrImage} alt="QR Code Pix" className="block w-[220px] h-[220px] sm:w-[240px] sm:h-[240px]" />
         </div>
         <p className="mt-4 text-xs text-muted-foreground">
           Valor: <span className="text-foreground font-medium">{formatBRL(amountCents)}</span>
@@ -557,16 +630,9 @@ function PaidScreen() {
   return (
     <div
       className="rounded-2xl border p-7 sm:p-10 text-center"
-      style={{
-        background: "var(--checkout-surface)",
-        borderColor: "var(--checkout-border)",
-        boxShadow: "var(--shadow-card)",
-      }}
+      style={{ background: "var(--checkout-surface)", borderColor: "var(--checkout-border)", boxShadow: "var(--shadow-card)" }}
     >
-      <div
-        className="mx-auto flex size-16 items-center justify-center rounded-full"
-        style={{ background: "var(--gradient-primary)" }}
-      >
+      <div className="mx-auto flex size-16 items-center justify-center rounded-full" style={{ background: "var(--gradient-primary)" }}>
         <CheckCircle2 className="size-8 text-background" strokeWidth={2.4} />
       </div>
       <h1 className="mt-6 font-display text-2xl font-semibold text-foreground">Pagamento confirmado!</h1>
