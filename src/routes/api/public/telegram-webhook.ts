@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Stripe from "stripe";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import { TELEGRAM_WEBHOOK_SECRET, tg, md, flag } from "@/lib/telegram.server";
+import { tg, md, flag, cleanUrl } from "@/lib/telegram.server";
 
 // -------------------- Auth --------------------
 async function isAdmin(chatId: number): Promise<boolean> {
@@ -50,7 +50,6 @@ function maskCPF(c?: string | null) {
   if (d.length !== 11) return c;
   return `${d.slice(0, 3)}.***.***-${d.slice(9)}`;
 }
-function shortId(id?: string | null) { return id ? id.slice(0, 8) : "—"; }
 function statusEmoji(s: string) {
   return ({
     paid: "✅", pending: "⏳", draft: "📝", expired: "⌛", failed: "❌",
@@ -62,11 +61,11 @@ async function renderCheckouts(page: number) {
   const to = from + PAGE_SIZE - 1;
   const { data: orders, count } = await supabaseAdmin
     .from("pix_orders")
-    .select("id, plan_key, amount_cents, status, customer_name, customer_email, customer_cpf, stripe_payment_intent_id, created_at", { count: "exact" })
+    .select("id, slug, plan_key, amount_cents, status, customer_name, customer_email, customer_cpf, stripe_payment_intent_id, created_at", { count: "exact" })
     .order("created_at", { ascending: false })
     .range(from, to);
 
-  let stripeExtras: Record<string, string> = {};
+  const stripeExtras: Record<string, string> = {};
   const stripeKey = process.env.STRIPE_SECRET_KEY;
   if (stripeKey && orders?.length) {
     try {
@@ -75,7 +74,7 @@ async function renderCheckouts(page: number) {
         if (!o.stripe_payment_intent_id) continue;
         try {
           const pi = await stripe.paymentIntents.retrieve(o.stripe_payment_intent_id);
-          stripeExtras[o.id] = `Stripe: \`${pi.status}\``;
+          stripeExtras[o.id] = pi.status;
         } catch { /* ignore */ }
       }
     } catch { /* ignore */ }
@@ -91,10 +90,10 @@ async function renderCheckouts(page: number) {
       const when = new Date(o.created_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
       text += `${statusEmoji(o.status)} *${md(formatBRL(o.amount_cents))}* — \`${md(o.status)}\`\n`;
       text += `👤 ${md(o.customer_name ?? "—")}\n`;
-      text += `✉️ ${md(o.customer_email ?? "—")}\n`;
+      text += `✉️ \`${md(o.customer_email ?? "—")}\`\n`;
       text += `🆔 CPF ${md(maskCPF(o.customer_cpf))}\n`;
-      text += `📦 ${md(o.plan_key)} · \`#${md(shortId(o.id))}\`\n`;
-      if (stripeExtras[o.id]) text += `💠 ${md(stripeExtras[o.id])}\n`;
+      text += `📦 ${md(o.plan_key)} · \`#${md(o.slug ?? "—")}\`\n`;
+      if (stripeExtras[o.id]) text += `💠 Stripe: \`${md(stripeExtras[o.id])}\`\n`;
       text += `🕒 ${md(when)}\n\n`;
     }
   }
@@ -130,8 +129,8 @@ async function renderTracking(page: number) {
       text += `${flag(e.country_code)} *${md(e.country ?? "Desconhecido")}* · ${md(e.city ?? "—")}\n`;
       text += `📡 \`${md(e.ip ?? "—")}\`${flags ? ` · ${md(flags)}` : ""}\n`;
       text += `📱 ${md(e.device ?? "—")} · ${md(e.browser ?? "—")} · ${md(e.os ?? "—")}\n`;
-      text += `📄 ${md(e.path ?? "/")}\n`;
-      if (e.referrer) text += `↩️ ${md(e.referrer.slice(0, 60))}\n`;
+      text += `📄 \`${md(cleanUrl(e.path, 40))}\`\n`;
+      if (e.referrer) text += `↩️ \`${md(cleanUrl(e.referrer, 50))}\`\n`;
       if (e.isp) text += `🏢 ${md(e.isp)}\n`;
       text += `🕒 ${md(when)}\n\n`;
     }
@@ -195,16 +194,27 @@ function welcomeMessage(name?: string) {
   };
 }
 
+// Send helper that always disables link previews (no images, no embeds).
+async function sendNoPreview(body: Record<string, unknown>) {
+  return tg("sendMessage", {
+    ...body,
+    disable_web_page_preview: true,
+    link_preview_options: { is_disabled: true },
+  });
+}
+async function editNoPreview(body: Record<string, unknown>) {
+  return tg("editMessageText", {
+    ...body,
+    disable_web_page_preview: true,
+    link_preview_options: { is_disabled: true },
+  });
+}
+
 // -------------------- Handler --------------------
 export const Route = createFileRoute("/api/public/telegram-webhook")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const secret = request.headers.get("x-telegram-bot-api-secret-token");
-        if (secret !== TELEGRAM_WEBHOOK_SECRET) {
-          return new Response("Unauthorized", { status: 401 });
-        }
-
         let update: any;
         try { update = await request.json(); }
         catch { return new Response("Bad request", { status: 400 }); }
@@ -217,11 +227,10 @@ export const Route = createFileRoute("/api/public/telegram-webhook")({
             const username: string | undefined = msg.from?.username;
             const firstName: string | undefined = msg.from?.first_name;
 
-            // Bootstrap first admin
             const becameAdmin = await ensureFirstAdmin(chatId, username, firstName);
             const allowed = becameAdmin || (await isAdmin(chatId));
             if (!allowed) {
-              await tg("sendMessage", {
+              await sendNoPreview({
                 chat_id: chatId,
                 text: "⛔ Acesso restrito. Este bot é privado.",
               });
@@ -230,14 +239,14 @@ export const Route = createFileRoute("/api/public/telegram-webhook")({
 
             if (text.startsWith("/start") || text === "/menu") {
               const w = welcomeMessage(firstName);
-              await tg("sendMessage", {
+              await sendNoPreview({
                 chat_id: chatId,
                 text: w.text,
                 parse_mode: "MarkdownV2",
                 reply_markup: w.reply_markup,
               });
             } else {
-              await tg("sendMessage", {
+              await sendNoPreview({
                 chat_id: chatId,
                 text: "Use /start para abrir o menu.",
               });
@@ -276,7 +285,7 @@ export const Route = createFileRoute("/api/public/telegram-webhook")({
 
             if (payload) {
               try {
-                await tg("editMessageText", {
+                await editNoPreview({
                   chat_id: chatId,
                   message_id: messageId,
                   text: payload.text,
@@ -284,8 +293,7 @@ export const Route = createFileRoute("/api/public/telegram-webhook")({
                   reply_markup: payload.reply_markup,
                 });
               } catch {
-                // edit may fail if content identical; fallback to send
-                await tg("sendMessage", {
+                await sendNoPreview({
                   chat_id: chatId,
                   text: payload.text,
                   parse_mode: "MarkdownV2",
