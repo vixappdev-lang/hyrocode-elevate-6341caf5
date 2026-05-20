@@ -1,153 +1,102 @@
+# Plano de execução
 
-## 1. Modal "Entrar em contato" — responsividade mobile
+Antes de tudo, **um ponto crítico que depende de você**:
 
-Arquivo: `src/components/site/ContactModal.tsx`
+> O erro atual do checkout (`The payment method type "pix" is invalid...`) **não é bug de código** — é a sua conta Stripe que ainda **não tem Pix ativado**. Eu posso deixar 100% do código pronto, mas o Pix só vai funcionar de verdade depois que você ativar em: Stripe Dashboard → Settings → Payments → Payment methods → **Pix** (precisa ser conta Stripe Brasil). Sem isso, qualquer tentativa retorna esse mesmo erro.
 
-- `DialogContent` hoje tem `sm:max-w-lg` mas sem largura/padding controlados no mobile → no celular fica colado nas bordas e os inputs estouram. Vou ajustar para:
-  - `w-[calc(100vw-1.5rem)] max-w-[420px] sm:max-w-lg p-5 sm:p-6 max-h-[90dvh] overflow-y-auto rounded-2xl`
-- Inputs/textarea/select: garantir `text-base sm:text-sm` (evita zoom do iOS) e `min-h-[44px]` para toque.
-- Grid `Estado + WhatsApp`: manter `grid-cols-1 sm:grid-cols-2` (hoje quebra ok) e padronizar altura do `SelectTrigger` com os inputs (`h-11`).
-- Botão de submit: `py-3.5` e largura total, já está, só padronizar com o resto.
-- Título: reduzir no mobile (`text-xl sm:text-2xl`) para não quebrar feio.
+Vou seguir mesmo assim, deixando tudo pronto pra ativar no minuto que o Pix for liberado na sua conta.
 
-Nada de lógica nova, só CSS/markup do modal.
+---
 
-## 2. SEO + logo no resultado do Google
+## 1. Checkout novo (inspirado no Cakto, mais limpo e profissional)
 
-Objetivo: aparecer com a logo HyroCode no card de busca (o "favicon" grande do Google) e melhorar o ranqueamento para buscas tipo "hyrocode", "criação de site", "landing page premium", "sistema sob medida", etc.
+**URL nova:** `/checkout/$orderId` (UUID gerado, ex: `/checkout/a1b2c3d4-...`). O `landing-premium` some da URL.
 
-### 2a. Logo no Google (favicon + organization logo)
+**Fluxo:**
+1. Usuário clica em "Quero esse plano" no `Pricing.tsx`.
+2. Botão chama server fn `startCheckout({ planKey })` → cria registro em `pix_orders` (status `draft`, sem dados de cliente ainda) e retorna `orderId` (UUID).
+3. Frontend navega para `/checkout/{orderId}`.
+4. Página carrega dados do pedido (plano, valor) via `getCheckoutOrder({ orderId })`.
 
-O Google usa: (a) `<link rel="icon">` 48×48+ quadrado nítido e (b) JSON-LD `Organization.logo` apontando pra URL pública.
+**Layout (inspirado em pay.cakto.com.br, mas mais refinado):**
+- **Banner topo full-width**: faixa escura com selo "Pagamento 100% seguro • Pix • SSL 256-bit" + logo HyroCode + cronômetro de oferta (visual, não funcional invasivo).
+- **Header limpo**: logo + "Ambiente seguro".
+- **Grid 2 colunas (desktop) / 1 coluna (mobile)**:
+  - Esquerda: resumo do produto (nome **"Landing Page - HyroCode"**, descrição curta, valor, bullets do que inclui, badges LGPD/SSL/Pix).
+  - Direita: formulário compacto (**apenas Nome, Email, CPF** — removido "sobre o projeto") → botão "Gerar Pix" → tela com QR + copia-e-cola.
+- Tipografia/cores do design system existente (nada de neon), espaçamento generoso, micro-animações sutis.
+- **Mobile total**: inputs `h-12 text-base` (sem zoom iOS), botões grandes, sticky CTA, QR centralizado, copia-e-cola com botão "Copiar" embaixo (não ao lado).
+- Polling automático a cada 4s pra confirmar pagamento; tela de sucesso com próximos passos.
 
-Passos:
-- Copiar `src/assets/hyrocode-logo.png` (já existe, não vou recriar) para `public/`:
-  - `public/favicon.png` (512×512 - usa a versão já existente)
-  - `public/apple-touch-icon.png` (180×180)
-  - manter `public/favicon.ico` se existir
-- Em `src/routes/__root.tsx`, dentro de `links`, adicionar:
-  - `{ rel: "icon", type: "image/png", sizes: "512x512", href: "/favicon.png" }`
-  - `{ rel: "apple-touch-icon", href: "/apple-touch-icon.png" }`
-- Atualizar o JSON-LD `Organization` no `__root.tsx` para incluir:
-  - `logo: "https://www.hyrocode.online/favicon.png"`
-  - `url: "https://www.hyrocode.online"` (alinhar com domínio www, hoje está sem)
+**Schema:** adiciono coluna `status='draft'` permitida em `pix_orders` (já existe), e tudo continua via `supabaseAdmin` + RLS atual.
 
-### 2b. SEO on-page para subir nas buscas
+---
 
-- `src/routes/__root.tsx`:
-  - `canonical` → `https://www.hyrocode.online/` (hoje está `hyrocode.online` sem www, divergente do `og:url`/robots).
-  - Adicionar `meta robots index,follow`, `meta theme-color`, `og:site_name`, `og:locale: pt_BR`.
-  - Adicionar `keywords` (suave, ainda lido por alguns motores): criação de sites, landing page, sistema sob medida, dashboard, hyrocode, desenvolvimento web brasil.
-- `src/routes/index.tsx`:
-  - `head()` mais rico, com `og:image` apontando para `/favicon.png` ou um social pré-existente (já tem o `social-...webp`, mantenho).
-  - Adicionar JSON-LD adicional `WebSite` com `potentialAction` (SearchAction) — habilita sitelinks searchbox.
-  - Adicionar JSON-LD `LocalBusiness` / `ProfessionalService` se fizer sentido (vou usar `ProfessionalService` com nome HyroCode, área de atendimento Brasil).
-- `public/robots.txt`: já está apontando os dois sitemaps, ok.
-- Verificar que `/sitemap.xml` está retornando 200 e listando `/`. (Não vou mexer no sitemap se já funciona — apenas confirmo.)
+## 2. Remover admin / dashboard / rastreio
 
-Observação: indexação efetiva depende do Google Search Console. Se você ainda não verificou o domínio, posso adicionar a meta tag de verificação assim que me passar o token, mas isso é opcional pra esse loop.
+Deletar:
+- `src/routes/admin.tsx`, `admin.dashboard.tsx`, `admin.solicitacoes.tsx`, `admin.configuracoes.tsx`, `admin.rastreio.tsx`
+- `src/routes/api/public/admin-*.ts` (admin-login, admin-stats, admin-contacts, admin-visitors, admin-settings, pricing-buttons)
+- `src/components/admin/` (pasta inteira incluindo `VisitorMap.tsx`)
+- `src/components/site/VisitorTracker.tsx` + rota `api/public/track.ts` (vai pro tracking via bot — ver §3)
 
-## 3. Checkout próprio com Stripe (Pix only)
+Tracking de visitantes **continua** salvando em `visitor_events` (não removo a tabela, o bot vai ler dela), mas o painel admin web sai. O acesso vira **só pelo Telegram**.
 
-### 3a. Decisão técnica
+> Espera — se eu remover o `VisitorTracker` e o `/api/public/track`, o bot não tem o que listar em "rastreio". **Vou manter** o `VisitorTracker` no site e o endpoint `track.ts` (são silenciosos, ninguém vê). Removo apenas a UI admin. Confirma essa interpretação? (Por padrão sigo assim.)
 
-- Pix no Stripe só funciona com conta Stripe **Brasil** + capability `pix_payments` ativa. É a integração **BYOK** (`STRIPE_SECRET_KEY` da sua conta). A integração "Seamless Payments" da Lovable não cobre Pix BR, então a BYOK é a correta aqui.
-- Fluxo Pix oficial (docs.stripe.com/payments/pix): criar `PaymentIntent` com `payment_method_types: ['pix']` → confirmar → ler `next_action.pix_display_qr_code` que devolve `image_url_png`, `image_url_svg`, `data` (copia-e-cola) e `expires_at`.
-- Confirmação assíncrona: usar webhook `payment_intent.succeeded` em `/api/public/stripe-webhook` para marcar pedido como pago.
+---
 
-### 3b. Banco de dados (migration)
+## 3. Bot Telegram (operante imediato)
 
-Nova tabela `pix_orders`:
-- `id uuid pk`, `created_at`, `updated_at`
-- `plan_key text` (ex: `landing_premium`)
-- `amount_cents int`, `currency text default 'brl'`
-- `customer_name text`, `customer_email text`, `customer_cpf text`, `customer_about text`
-- `status text` (`pending` | `paid` | `expired` | `failed`)
-- `stripe_payment_intent_id text unique`
-- `pix_qr_data text`, `pix_qr_image_url text`, `expires_at timestamptz`
+**Token:** `8884174946:AAHW...` — vou **mover pra secret** `TELEGRAM_BOT_TOKEN` (não fica no código).
 
-RLS: nenhum SELECT público (acesso só via service role nas server functions). INSERT/UPDATE também só via service role.
+**Arquitetura (sem connector, chamada direta à API do Telegram):**
+- Webhook em `src/routes/api/public/telegram-webhook.ts`.
+- Secret token derivado de `TELEGRAM_BOT_TOKEN` no header `X-Telegram-Bot-Api-Secret-Token` (proteção contra spoofing).
+- Registro do webhook feito por mim via `curl` após deploy: `setWebhook` apontando pra `https://project--425fa925-7dc6-45c7-a96e-6e4790911994-dev.lovable.app/api/public/telegram-webhook` (e também a URL de produção quando publicada).
 
-### 3c. Server functions e rotas
+**Comandos / menu interativo (Inline Keyboard):**
+- `/start` → mensagem de boas-vindas + menu inline com 3 botões: **💳 Checkouts**, **🌍 Rastreio**, **📊 Resumo**.
+- **💳 Checkouts** → lista últimos 10 pedidos da tabela `pix_orders` **+** busca em tempo real os `PaymentIntents` recentes da Stripe (`stripe.paymentIntents.list({ limit: 10 })`) com: status, valor, cliente, email, CPF, método, data. Botões de paginação (« anterior / próxima »).
+- **🌍 Rastreio** → últimos 10 visitantes de `visitor_events`: IP, país (com bandeira), cidade, device, browser, página, referrer, VPN/proxy flag. Paginação.
+- **📊 Resumo** → totais: visitantes hoje/7d/30d, pedidos pendentes, pedidos pagos, receita total.
+- Filtro por **chat_id autorizado** (você manda `/start`, eu pego seu chat_id e adiciono à secret `TELEGRAM_ADMIN_CHAT_IDS`) — sem isso o bot ignora estranhos.
 
-- `src/lib/checkout.functions.ts` (createServerFn):
-  - `createPixOrder({ planKey, name, email, cpf, about })`:
-    - valida com zod (nome 2-120, email, cpf 11 dígitos com validador de DV, about ≤2000).
-    - calcula `amount_cents` a partir de tabela server-side (não confiar no client).
-    - cria PaymentIntent Stripe, confirma server-side com `payment_method_data: { type: 'pix' }`.
-    - persiste em `pix_orders` com `pending`, devolve `{ orderId, qrImage, qrCopyPaste, expiresAt, amount }`.
-  - `getPixOrder({ orderId })`: lê status para polling no front (sem expor PII).
-- `src/routes/api/public/stripe-webhook.ts`:
-  - verifica assinatura com `STRIPE_WEBHOOK_SECRET` (constructEvent).
-  - em `payment_intent.succeeded` → marca `pix_orders` como `paid`.
-  - em `payment_intent.payment_failed` → `failed`.
+**Como autorizo seu chat_id sem você me passar manualmente?** Primeira mensagem `/start` de qualquer pessoa retorna o `chat_id` dela; você me diz qual é o seu e eu adiciono à secret. Ou faço modo simples: primeiro a mandar `/start` vira admin automaticamente. **Vou fazer essa segunda opção** (mais prático).
 
-### 3d. Frontend do checkout
+---
 
-Nova rota: `src/routes/checkout.$plan.tsx` (ex.: `/checkout/landing-premium`).
+## 4. Correções pontuais
+- `Pricing.tsx`: botão do plano premium agora chama `startCheckout` e navega pro UUID.
+- Label do plano em todo lugar: **"Landing Page - HyroCode"**.
+- Limpar imports/rotas órfãs após remoção do admin.
 
-Layout limpo, **respeitando o design system atual** (sem neon, sem cores chamativas extras, só os tokens já existentes — `bg-background`, `card/50`, `border-white/[0.08]`, `text-foreground`, tipografia display). Estrutura:
+---
 
-```text
-┌─────────────────────────────────────────────┐
-│  Banner topo (logo HyroCode + selo seguro)  │
-│  "Pagamento 100% seguro • LGPD • Pix"       │
-├─────────────────────────────────────────────┤
-│  Esquerda (form)         │ Direita (resumo) │
-│  Nome                    │ Plano: Landing…  │
-│  Email                   │ Valor: R$ 497    │
-│  CPF                     │ Forma: Pix       │
-│  Sobre o projeto         │ Selos LGPD/SSL   │
-│  [ Continuar ]           │                  │
-└─────────────────────────────────────────────┘
-```
+## 5. Secrets que vou pedir (em uma única tela)
+- `TELEGRAM_BOT_TOKEN` — o token que você mandou (vou pré-preencher na descrição pra você só colar).
+- `TELEGRAM_WEBHOOK_SECRET` — gero um valor sugerido, você só confirma.
 
-Após "Continuar":
-- estado `step = "pix"` no mesmo componente.
-- mostra QR code centralizado (imagem retornada pelo Stripe).
-- abaixo: campo `readonly` com o copia-e-cola + botão "Copiar Pix" (clipboard).
-- contador regressivo até `expiresAt`.
-- polling a cada 4s em `getPixOrder` → quando `paid`, troca para tela de sucesso com confirmação e próximos passos (WhatsApp HyroCode).
+`STRIPE_SECRET_KEY` e `STRIPE_WEBHOOK_SECRET` já estão configurados.
 
-Mobile:
-- grid `grid-cols-1 lg:grid-cols-[1fr_360px]`, resumo vira card no topo no mobile.
-- inputs `h-12 text-base` (sem zoom iOS), botões `py-3.5`, padding container `px-4 sm:px-6`.
-- QR code com `max-w-[260px] w-full mx-auto`.
-- copia-e-cola: `font-mono text-xs break-all` + botão full-width no mobile.
+---
 
-CTA dos planos: trocar o `cta` de "QUERO ESSE" (Whatsapp) no `Pricing.tsx` para `Link to="/checkout/landing-premium"` no plano Landing Premium. O plano "Sistemas Sob Medida" continua abrindo o modal de contato (valor a consultar não cabe Pix direto).
+## 6. O que **não** vou fazer (pra não bagunçar)
+- Não mexo em Hero, Footer, Pricing visual, Navbar, SEO, sitemap, AntiInspect.
+- Não removo a tabela `visitor_events` nem o tracker (bot precisa).
+- Não toco em nada de Vercel/git além do que já existe.
 
-### 3e. Validações de segurança
+---
 
-- Server: zod no input, CPF com checksum, valor da fonte de verdade no servidor.
-- Webhook: assinatura obrigatória, `timingSafeEqual`.
-- `pix_orders`: sem SELECT público; o endpoint `getPixOrder` retorna só `{ status, expiresAt }`.
-- Nada de chave secreta no client; só `process.env.STRIPE_SECRET_KEY` dentro de `.handler()`.
+## Ordem de execução
+1. Migração: permitir `status='draft'` (constraint check) + índices.
+2. Deletar arquivos do admin.
+3. Reescrever `checkout.functions.ts` (+ `startCheckout`, `getCheckoutOrder`).
+4. Reescrever `src/routes/checkout.$orderId.tsx` (novo arquivo) + deletar `checkout.$plan.tsx`.
+5. Atualizar `Pricing.tsx`.
+6. Criar `src/lib/telegram.server.ts` (helpers API Telegram) + `src/lib/telegram-bot.functions.ts`.
+7. Criar `src/routes/api/public/telegram-webhook.ts`.
+8. Pedir secrets.
+9. Após aprovação dos secrets: `curl setWebhook` pra registrar o bot e testar com `/start`.
 
-### 3f. Secrets necessários (vou pedir depois da aprovação)
-
-- `STRIPE_SECRET_KEY` — sua chave secreta (sk_live_... ou sk_test_... pra testar).
-- `STRIPE_WEBHOOK_SECRET` — gerado quando você cria o endpoint webhook em https://dashboard.stripe.com/webhooks apontando pra `https://www.hyrocode.online/api/public/stripe-webhook` (te explico passo a passo).
-
-Pré-requisito que **só você consegue fazer** no Stripe:
-1. Conta Stripe Brasil verificada.
-2. Ativar Pix no dashboard: Settings → Payment methods → Pix → Turn on.
-3. Criar o webhook endpoint apontando pra URL acima, ouvindo `payment_intent.succeeded` e `payment_intent.payment_failed`.
-
-## Arquivos afetados (resumo)
-
-Editar:
-- `src/components/site/ContactModal.tsx` (responsivo)
-- `src/routes/__root.tsx` (SEO, favicon, JSON-LD)
-- `src/routes/index.tsx` (head extra, JSON-LD WebSite)
-- `src/components/site/Pricing.tsx` (CTA Landing Premium → /checkout)
-
-Criar:
-- `public/favicon.png`, `public/apple-touch-icon.png` (copiados da logo existente)
-- `supabase/migrations/<ts>_pix_orders.sql`
-- `src/lib/checkout.functions.ts`
-- `src/routes/api/public/stripe-webhook.ts`
-- `src/routes/checkout.$plan.tsx`
-- `src/components/checkout/CheckoutForm.tsx`, `PixDisplay.tsx`, `OrderSummary.tsx`
-
-Após aprovar este plano eu já peço as duas keys do Stripe e implemento tudo de uma vez.
+Posso seguir?
