@@ -13,11 +13,13 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SitemapRouteImport } from './routes/sitemap'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CheckoutPlanRouteImport } from './routes/checkout.$plan'
 import { Route as AdminSolicitacoesRouteImport } from './routes/admin.solicitacoes'
 import { Route as AdminRastreioRouteImport } from './routes/admin.rastreio'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
 import { Route as AdminConfiguracoesRouteImport } from './routes/admin.configuracoes'
 import { Route as ApiPublicTrackRouteImport } from './routes/api/public/track'
+import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as ApiPublicPricingButtonsRouteImport } from './routes/api/public/pricing-buttons'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
 import { Route as ApiPublicAdminVisitorsRouteImport } from './routes/api/public/admin-visitors'
@@ -46,6 +48,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutPlanRoute = CheckoutPlanRouteImport.update({
+  id: '/checkout/$plan',
+  path: '/checkout/$plan',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminSolicitacoesRoute = AdminSolicitacoesRouteImport.update({
   id: '/solicitacoes',
   path: '/solicitacoes',
@@ -69,6 +76,11 @@ const AdminConfiguracoesRoute = AdminConfiguracoesRouteImport.update({
 const ApiPublicTrackRoute = ApiPublicTrackRouteImport.update({
   id: '/api/public/track',
   path: '/api/public/track',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
+  id: '/api/public/stripe-webhook',
+  path: '/api/public/stripe-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicPricingButtonsRoute = ApiPublicPricingButtonsRouteImport.update({
@@ -116,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/rastreio': typeof AdminRastreioRoute
   '/admin/solicitacoes': typeof AdminSolicitacoesRoute
+  '/checkout/$plan': typeof CheckoutPlanRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
   '/api/public/admin-settings': typeof ApiPublicAdminSettingsRoute
@@ -123,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/api/public/admin-visitors': typeof ApiPublicAdminVisitorsRoute
   '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/pricing-buttons': typeof ApiPublicPricingButtonsRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/track': typeof ApiPublicTrackRoute
 }
 export interface FileRoutesByTo {
@@ -134,6 +148,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/rastreio': typeof AdminRastreioRoute
   '/admin/solicitacoes': typeof AdminSolicitacoesRoute
+  '/checkout/$plan': typeof CheckoutPlanRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
   '/api/public/admin-settings': typeof ApiPublicAdminSettingsRoute
@@ -141,6 +156,7 @@ export interface FileRoutesByTo {
   '/api/public/admin-visitors': typeof ApiPublicAdminVisitorsRoute
   '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/pricing-buttons': typeof ApiPublicPricingButtonsRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/track': typeof ApiPublicTrackRoute
 }
 export interface FileRoutesById {
@@ -153,6 +169,7 @@ export interface FileRoutesById {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/rastreio': typeof AdminRastreioRoute
   '/admin/solicitacoes': typeof AdminSolicitacoesRoute
+  '/checkout/$plan': typeof CheckoutPlanRoute
   '/api/public/admin-contacts': typeof ApiPublicAdminContactsRoute
   '/api/public/admin-login': typeof ApiPublicAdminLoginRoute
   '/api/public/admin-settings': typeof ApiPublicAdminSettingsRoute
@@ -160,6 +177,7 @@ export interface FileRoutesById {
   '/api/public/admin-visitors': typeof ApiPublicAdminVisitorsRoute
   '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/pricing-buttons': typeof ApiPublicPricingButtonsRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/track': typeof ApiPublicTrackRoute
 }
 export interface FileRouteTypes {
@@ -173,6 +191,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/rastreio'
     | '/admin/solicitacoes'
+    | '/checkout/$plan'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
     | '/api/public/admin-settings'
@@ -180,6 +199,7 @@ export interface FileRouteTypes {
     | '/api/public/admin-visitors'
     | '/api/public/contact'
     | '/api/public/pricing-buttons'
+    | '/api/public/stripe-webhook'
     | '/api/public/track'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -191,6 +211,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/rastreio'
     | '/admin/solicitacoes'
+    | '/checkout/$plan'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
     | '/api/public/admin-settings'
@@ -198,6 +219,7 @@ export interface FileRouteTypes {
     | '/api/public/admin-visitors'
     | '/api/public/contact'
     | '/api/public/pricing-buttons'
+    | '/api/public/stripe-webhook'
     | '/api/public/track'
   id:
     | '__root__'
@@ -209,6 +231,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/rastreio'
     | '/admin/solicitacoes'
+    | '/checkout/$plan'
     | '/api/public/admin-contacts'
     | '/api/public/admin-login'
     | '/api/public/admin-settings'
@@ -216,6 +239,7 @@ export interface FileRouteTypes {
     | '/api/public/admin-visitors'
     | '/api/public/contact'
     | '/api/public/pricing-buttons'
+    | '/api/public/stripe-webhook'
     | '/api/public/track'
   fileRoutesById: FileRoutesById
 }
@@ -224,6 +248,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   SitemapRoute: typeof SitemapRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  CheckoutPlanRoute: typeof CheckoutPlanRoute
   ApiPublicAdminContactsRoute: typeof ApiPublicAdminContactsRoute
   ApiPublicAdminLoginRoute: typeof ApiPublicAdminLoginRoute
   ApiPublicAdminSettingsRoute: typeof ApiPublicAdminSettingsRoute
@@ -231,6 +256,7 @@ export interface RootRouteChildren {
   ApiPublicAdminVisitorsRoute: typeof ApiPublicAdminVisitorsRoute
   ApiPublicContactRoute: typeof ApiPublicContactRoute
   ApiPublicPricingButtonsRoute: typeof ApiPublicPricingButtonsRoute
+  ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   ApiPublicTrackRoute: typeof ApiPublicTrackRoute
 }
 
@@ -262,6 +288,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout/$plan': {
+      id: '/checkout/$plan'
+      path: '/checkout/$plan'
+      fullPath: '/checkout/$plan'
+      preLoaderRoute: typeof CheckoutPlanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/solicitacoes': {
@@ -297,6 +330,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/track'
       fullPath: '/api/public/track'
       preLoaderRoute: typeof ApiPublicTrackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/stripe-webhook': {
+      id: '/api/public/stripe-webhook'
+      path: '/api/public/stripe-webhook'
+      fullPath: '/api/public/stripe-webhook'
+      preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/pricing-buttons': {
@@ -372,6 +412,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   SitemapRoute: SitemapRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  CheckoutPlanRoute: CheckoutPlanRoute,
   ApiPublicAdminContactsRoute: ApiPublicAdminContactsRoute,
   ApiPublicAdminLoginRoute: ApiPublicAdminLoginRoute,
   ApiPublicAdminSettingsRoute: ApiPublicAdminSettingsRoute,
@@ -379,18 +420,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicAdminVisitorsRoute: ApiPublicAdminVisitorsRoute,
   ApiPublicContactRoute: ApiPublicContactRoute,
   ApiPublicPricingButtonsRoute: ApiPublicPricingButtonsRoute,
+  ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   ApiPublicTrackRoute: ApiPublicTrackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -72,25 +72,36 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
+      { name: "googlebot", content: "index, follow" },
+      { name: "theme-color", content: "#0a0a0a" },
       { title: "HyroCode | Sistemas digital" },
       {
         name: "description",
         content:
           "HYROCODE cria soluções personalizadas, modernas e funcionais para destacar seu negócio online. Transformamos sua ideia em sucesso digital!",
       },
+      {
+        name: "keywords",
+        content:
+          "hyrocode, criação de sites, landing page premium, sistema sob medida, dashboard, desenvolvimento web, software sob medida, painel administrativo, criação de site profissional, agência digital brasil",
+      },
       { name: "author", content: "HyroCode" },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "HyroCode" },
+      { property: "og:locale", content: "pt_BR" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:title", content: "HyroCode | Sistemas digital" },
       { name: "twitter:title", content: "HyroCode | Sistemas digital" },
-      { name: "description", content: "HYROCODE cria soluções personalizadas, modernas e funcionais para destacar seu negócio online. Transformamos sua ideia em sucesso digital!" },
       { property: "og:description", content: "HYROCODE cria soluções personalizadas, modernas e funcionais para destacar seu negócio online. Transformamos sua ideia em sucesso digital!" },
       { name: "twitter:description", content: "HYROCODE cria soluções personalizadas, modernas e funcionais para destacar seu negócio online. Transformamos sua ideia em sucesso digital!" },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/5wz0PRKx06bTGHTlSFcAWZ4xhd12/social-images/social-1779141516270-hyrocode.webp" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/5wz0PRKx06bTGHTlSFcAWZ4xhd12/social-images/social-1779141516270-hyrocode.webp" },
     ],
     links: [
-      { rel: "canonical", href: "https://hyrocode.online/" },
+      { rel: "icon", type: "image/png", sizes: "512x512", href: "/favicon.png" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon.png" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -106,10 +117,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "HyroCode",
-          url: "https://hyrocode.online",
+          url: "https://www.hyrocode.online",
+          logo: "https://www.hyrocode.online/favicon.png",
           description:
             "HYROCODE cria soluções personalizadas, modernas e funcionais para destacar seu negócio online. Transformamos sua ideia em sucesso digital!",
           sameAs: ["https://instagram.com/hyrocode"],
+          contactPoint: {
+            "@type": "ContactPoint",
+            contactType: "customer support",
+            areaServed: "BR",
+            availableLanguage: ["Portuguese"],
+          },
         }),
       },
     ],
