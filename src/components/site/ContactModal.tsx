@@ -90,14 +90,14 @@ export function ContactModal({ open, onOpenChange }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={(v) => (v ? onOpenChange(true) : handleClose())}>
-      <DialogContent className="w-[calc(100vw-1.5rem)] max-w-[440px] sm:max-w-lg max-h-[90dvh] overflow-y-auto rounded-2xl border-white/[0.08] bg-card p-5 sm:p-6">
+      <DialogContent className="w-[calc(100vw-1rem)] max-w-[440px] sm:max-w-lg max-h-[92dvh] overflow-y-auto rounded-2xl border-white/[0.08] bg-card p-4 sm:p-6">
         {!submitted ? (
           <>
-            <DialogHeader className="text-left">
-              <DialogTitle className="font-display text-xl sm:text-2xl font-semibold text-foreground">
+            <DialogHeader className="text-left pr-8">
+              <DialogTitle className="font-display text-lg sm:text-2xl font-semibold leading-tight text-foreground">
                 Vamos conversar sobre seu projeto
               </DialogTitle>
-              <DialogDescription className="text-sm leading-relaxed text-muted-foreground">
+              <DialogDescription className="text-[13px] sm:text-sm leading-relaxed text-muted-foreground">
                 Preencha o formulário abaixo e nossa equipe entra em contato em até 24 horas com uma proposta personalizada.
               </DialogDescription>
             </DialogHeader>
