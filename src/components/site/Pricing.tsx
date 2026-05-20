@@ -43,7 +43,7 @@ const plans: Plan[] = [
     cta: {
       type: "link",
       label: "QUERO ESSE",
-      href: "https://wa.me/?text=Quero%20a%20Landing%20Page%20Premium%20da%20HyroCode",
+      href: "/checkout/landing-premium",
     },
   },
   {
