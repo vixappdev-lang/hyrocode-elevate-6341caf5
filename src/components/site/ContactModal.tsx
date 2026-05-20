@@ -137,7 +137,7 @@ export function ContactModal({ open, onOpenChange }: Props) {
                     Estado *
                   </label>
                   <Select value={form.estado} onValueChange={(v) => setForm({ ...form, estado: v })}>
-                    <SelectTrigger className="h-11 w-full rounded-xl border-white/10 bg-background/60 px-4 text-base sm:text-sm text-foreground transition-colors focus:border-primary/60 focus:ring-0">
+                    <SelectTrigger className="h-12 w-full rounded-xl border-white/10 bg-background/60 px-3.5 text-[16px] sm:text-sm text-foreground transition-colors focus:border-primary/60 focus:ring-0">
                       <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
                     <SelectContent className="max-h-72 rounded-xl border-white/10 bg-popover">
