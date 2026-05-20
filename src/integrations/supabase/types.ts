@@ -50,9 +50,9 @@ export type Database = {
           created_at: string
           currency: string
           customer_about: string | null
-          customer_cpf: string
-          customer_email: string
-          customer_name: string
+          customer_cpf: string | null
+          customer_email: string | null
+          customer_name: string | null
           expires_at: string | null
           id: string
           pix_qr_data: string | null
@@ -67,9 +67,9 @@ export type Database = {
           created_at?: string
           currency?: string
           customer_about?: string | null
-          customer_cpf: string
-          customer_email: string
-          customer_name: string
+          customer_cpf?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
           expires_at?: string | null
           id?: string
           pix_qr_data?: string | null
@@ -84,9 +84,9 @@ export type Database = {
           created_at?: string
           currency?: string
           customer_about?: string | null
-          customer_cpf?: string
-          customer_email?: string
-          customer_name?: string
+          customer_cpf?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
           expires_at?: string | null
           id?: string
           pix_qr_data?: string | null
@@ -113,6 +113,27 @@ export type Database = {
           key?: string
           updated_at?: string
           value?: Json
+        }
+        Relationships: []
+      }
+      telegram_admins: {
+        Row: {
+          chat_id: number
+          created_at: string
+          first_name: string | null
+          username: string | null
+        }
+        Insert: {
+          chat_id: number
+          created_at?: string
+          first_name?: string | null
+          username?: string | null
+        }
+        Update: {
+          chat_id?: number
+          created_at?: string
+          first_name?: string | null
+          username?: string | null
         }
         Relationships: []
       }
