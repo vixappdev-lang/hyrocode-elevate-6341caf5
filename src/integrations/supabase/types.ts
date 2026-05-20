@@ -58,6 +58,7 @@ export type Database = {
           pix_qr_data: string | null
           pix_qr_image_url: string | null
           plan_key: string
+          slug: string
           status: string
           stripe_payment_intent_id: string | null
           updated_at: string
@@ -75,6 +76,7 @@ export type Database = {
           pix_qr_data?: string | null
           pix_qr_image_url?: string | null
           plan_key: string
+          slug?: string
           status?: string
           stripe_payment_intent_id?: string | null
           updated_at?: string
@@ -92,6 +94,7 @@ export type Database = {
           pix_qr_data?: string | null
           pix_qr_image_url?: string | null
           plan_key?: string
+          slug?: string
           status?: string
           stripe_payment_intent_id?: string | null
           updated_at?: string
@@ -235,6 +238,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      gen_short_id: { Args: { len?: number }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
