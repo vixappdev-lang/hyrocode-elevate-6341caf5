@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { Check, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { Check, Loader2, Sparkles } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useReveal } from "@/hooks/use-reveal";
 import { ContactModal } from "./ContactModal";
-
-type RemoteButtons = Partial<Record<"essencial" | "pro", { url?: string; label?: string }>>;
-const PLAN_KEYS = ["essencial", "pro"] as const;
+import { startCheckout } from "@/lib/checkout.functions";
 
 type Plan = {
   name: string;
@@ -15,12 +15,12 @@ type Plan = {
   desc: string;
   features: string[];
   highlighted: boolean;
-  cta: { type: "link" | "modal"; label: string; href?: string };
+  cta: { type: "checkout" | "modal"; label: string; planKey?: "landing-premium" };
 };
 
 const plans: Plan[] = [
   {
-    name: "Landing Page Premium",
+    name: "Landing Page - HyroCode",
     badge: null,
     price: "R$ 497",
     priceSuffix: "à vista",
@@ -40,11 +40,7 @@ const plans: Plan[] = [
       "Estrutura 100% personalizada",
     ],
     highlighted: false,
-    cta: {
-      type: "link",
-      label: "QUERO ESSE",
-      href: "/checkout/landing-premium",
-    },
+    cta: { type: "checkout", label: "QUERO ESSE", planKey: "landing-premium" },
   },
   {
     name: "Sistemas & Painéis Sob Medida",
@@ -71,29 +67,22 @@ const plans: Plan[] = [
 export function Pricing() {
   const ref = useReveal<HTMLDivElement>();
   const [modalOpen, setModalOpen] = useState(false);
-  const [remote, setRemote] = useState<RemoteButtons>({});
+  const [loadingKey, setLoadingKey] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const startFn = useServerFn(startCheckout);
 
-  useEffect(() => {
-    fetch("/api/public/pricing-buttons")
-      .then((r) => r.json())
-      .then((d) => d.ok && d.value && setRemote(d.value as RemoteButtons))
-      .catch(() => {});
-  }, []);
+  const onCheckout = async (planKey: "landing-premium") => {
+    setLoadingKey(planKey);
+    try {
+      const { orderId } = await startFn({ data: { planKey } });
+      await navigate({ to: "/checkout/$orderId", params: { orderId } });
+    } catch (e) {
+      console.error(e);
+      setLoadingKey(null);
+    }
+  };
 
-  const resolvedPlans = plans.map((p, i) => {
-    const key = PLAN_KEYS[i];
-    const r = remote[key];
-    if (r?.url && r.url.trim()) {
-      return {
-        ...p,
-        cta: { type: "link" as const, label: r.label || p.cta.label, href: r.url },
-      };
-    }
-    if (r?.label && r.label.trim()) {
-      return { ...p, cta: { ...p.cta, label: r.label } };
-    }
-    return p;
-  });
+  const resolvedPlans = plans;
 
   return (
     <section id="precos" className="relative py-28 sm:py-32">
@@ -180,20 +169,20 @@ export function Pricing() {
                 ))}
               </ul>
 
-              {p.cta.type === "link" ? (
-                <a
-                  href={p.cta.href}
-                  {...(p.cta.href?.startsWith("http")
-                    ? { target: "_blank", rel: "noopener" }
-                    : {})}
-                  className={`btn-shine mt-8 inline-flex items-center justify-center rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] ${
+              {p.cta.type === "checkout" ? (
+                <button
+                  type="button"
+                  disabled={loadingKey === p.cta.planKey}
+                  onClick={() => p.cta.planKey && onCheckout(p.cta.planKey)}
+                  className={`btn-shine mt-8 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] disabled:opacity-70 ${
                     p.highlighted
                       ? "bg-foreground text-background shadow-[var(--shadow-elegant)]"
                       : "glass text-foreground hover:bg-white/[0.06]"
                   }`}
                 >
+                  {loadingKey === p.cta.planKey && <Loader2 className="size-4 animate-spin" />}
                   {p.cta.label}
-                </a>
+                </button>
               ) : (
                 <button
                   type="button"
