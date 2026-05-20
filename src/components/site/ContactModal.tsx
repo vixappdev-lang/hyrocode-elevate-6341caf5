@@ -33,6 +33,9 @@ type Props = {
   onOpenChange: (open: boolean) => void;
 };
 
+const inputCls =
+  "h-11 w-full rounded-xl border border-white/10 bg-background/60 px-4 text-base sm:text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/60";
+
 export function ContactModal({ open, onOpenChange }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -87,11 +90,11 @@ export function ContactModal({ open, onOpenChange }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={(v) => (v ? onOpenChange(true) : handleClose())}>
-      <DialogContent className="border-white/[0.08] bg-card sm:max-w-lg">
+      <DialogContent className="w-[calc(100vw-1.5rem)] max-w-[440px] sm:max-w-lg max-h-[90dvh] overflow-y-auto rounded-2xl border-white/[0.08] bg-card p-5 sm:p-6">
         {!submitted ? (
           <>
             <DialogHeader className="text-left">
-              <DialogTitle className="font-display text-2xl font-semibold text-foreground">
+              <DialogTitle className="font-display text-xl sm:text-2xl font-semibold text-foreground">
                 Vamos conversar sobre seu projeto
               </DialogTitle>
               <DialogDescription className="text-sm leading-relaxed text-muted-foreground">
@@ -101,7 +104,7 @@ export function ContactModal({ open, onOpenChange }: Props) {
 
             <form onSubmit={handleSubmit} className="mt-2 space-y-4">
               <div>
-                <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
                   Nome completo *
                 </label>
                 <input
@@ -110,12 +113,12 @@ export function ContactModal({ open, onOpenChange }: Props) {
                   value={form.nome}
                   onChange={(e) => setForm({ ...form, nome: e.target.value })}
                   placeholder="Seu nome"
-                  className="w-full rounded-xl border border-white/10 bg-background/60 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/60"
+                  className={inputCls}
                 />
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
                   Email *
                 </label>
                 <input
@@ -124,17 +127,17 @@ export function ContactModal({ open, onOpenChange }: Props) {
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="seuemail@exemplo.com"
-                  className="w-full rounded-xl border border-white/10 bg-background/60 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/60"
+                  className={inputCls}
                 />
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
                     Estado *
                   </label>
                   <Select value={form.estado} onValueChange={(v) => setForm({ ...form, estado: v })}>
-                    <SelectTrigger className="w-full rounded-xl border-white/10 bg-background/60 px-4 py-5 text-sm text-foreground transition-colors focus:border-primary/60 focus:ring-0">
+                    <SelectTrigger className="h-11 w-full rounded-xl border-white/10 bg-background/60 px-4 text-base sm:text-sm text-foreground transition-colors focus:border-primary/60 focus:ring-0">
                       <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
                     <SelectContent className="max-h-72 rounded-xl border-white/10 bg-popover">
@@ -147,22 +150,23 @@ export function ContactModal({ open, onOpenChange }: Props) {
                   </Select>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
                     WhatsApp *
                   </label>
                   <input
                     required maxLength={30}
                     type="tel"
+                    inputMode="tel"
                     value={form.contato}
                     onChange={(e) => setForm({ ...form, contato: e.target.value })}
                     placeholder="(00) 00000-0000"
-                    className="w-full rounded-xl border border-white/10 bg-background/60 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/60"
+                    className={inputCls}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
                   Descrição (opcional)
                 </label>
                 <textarea
@@ -170,7 +174,7 @@ export function ContactModal({ open, onOpenChange }: Props) {
                   value={form.descricao}
                   onChange={(e) => setForm({ ...form, descricao: e.target.value })}
                   placeholder="Conte um pouco sobre seu projeto, objetivos ou dúvidas..."
-                  className="w-full resize-none rounded-xl border border-white/10 bg-background/60 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/60"
+                  className="w-full resize-none rounded-xl border border-white/10 bg-background/60 px-4 py-2.5 text-base sm:text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/60"
                 />
               </div>
 
@@ -183,7 +187,7 @@ export function ContactModal({ open, onOpenChange }: Props) {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-shine mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold tracking-wide text-background shadow-[var(--shadow-elegant)] transition-all hover:translate-y-[-1px] disabled:cursor-not-allowed disabled:opacity-70"
+                className="btn-shine mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-foreground px-6 py-3.5 text-sm font-semibold tracking-wide text-background shadow-[var(--shadow-elegant)] transition-all hover:translate-y-[-1px] disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {loading ? (
                   <>
