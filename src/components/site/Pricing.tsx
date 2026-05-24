@@ -66,20 +66,6 @@ const plans: Plan[] = [
 export function Pricing() {
   const ref = useReveal<HTMLDivElement>();
   const [modalOpen, setModalOpen] = useState(false);
-  const [loadingKey, setLoadingKey] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const startFn = useServerFn(startCheckout);
-
-  const onCheckout = async (planKey: "landing-premium") => {
-    setLoadingKey(planKey);
-    try {
-      const { slug } = await startFn({ data: { planKey } });
-      await navigate({ to: "/checkout/$slug", params: { slug } });
-    } catch (e) {
-      console.error(e);
-      setLoadingKey(null);
-    }
-  };
 
   const resolvedPlans = plans;
 
