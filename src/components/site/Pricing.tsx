@@ -154,20 +154,19 @@ export function Pricing() {
                 ))}
               </ul>
 
-              {p.cta.type === "checkout" ? (
-                <button
-                  type="button"
-                  disabled={loadingKey === p.cta.planKey}
-                  onClick={() => p.cta.planKey && onCheckout(p.cta.planKey)}
-                  className={`btn-shine mt-8 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] disabled:opacity-70 ${
+              {p.cta.type === "external" ? (
+                <a
+                  href={p.cta.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`btn-shine mt-8 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] ${
                     p.highlighted
                       ? "bg-foreground text-background shadow-[var(--shadow-elegant)]"
                       : "glass text-foreground hover:bg-white/[0.06]"
                   }`}
                 >
-                  {loadingKey === p.cta.planKey && <Loader2 className="size-4 animate-spin" />}
                   {p.cta.label}
-                </button>
+                </a>
               ) : (
                 <button
                   type="button"
