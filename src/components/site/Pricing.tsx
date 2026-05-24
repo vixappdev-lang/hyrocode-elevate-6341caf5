@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Check, Loader2, Sparkles } from "lucide-react";
-import { useNavigate } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
+import { Check, Sparkles } from "lucide-react";
 import { useReveal } from "@/hooks/use-reveal";
 import { ContactModal } from "./ContactModal";
-import { startCheckout } from "@/lib/checkout.functions";
+
+const CAKTO_CHECKOUT_URL = "https://pay.cakto.com.br/c9osims_898122";
 
 type Plan = {
   name: string;
@@ -15,7 +14,7 @@ type Plan = {
   desc: string;
   features: string[];
   highlighted: boolean;
-  cta: { type: "checkout" | "modal"; label: string; planKey?: "landing-premium" };
+  cta: { type: "external" | "modal"; label: string; href?: string };
 };
 
 const plans: Plan[] = [
