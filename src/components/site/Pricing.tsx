@@ -21,9 +21,9 @@ const plans: Plan[] = [
   {
     name: "Landing Page - HyroCode",
     badge: null,
-    price: "R$ 497",
-    priceSuffix: "à vista",
-    installments: "ou 12× de R$ 49,70",
+    price: "R$ 597",
+    priceSuffix: "à vista no Pix",
+    installments: "ou no cartão 1× de R$ 597 · até 12× de R$ 61,67",
     desc: "Ideal para profissionais e marcas que querem presença forte, autoridade e conversão alta.",
     features: [
       "Logotipo feito do zero",
@@ -39,7 +39,7 @@ const plans: Plan[] = [
       "Estrutura 100% personalizada",
     ],
     highlighted: false,
-    cta: { type: "checkout", label: "QUERO ESSE", planKey: "landing-premium" },
+    cta: { type: "external", label: "QUERO UMA", href: CAKTO_CHECKOUT_URL },
   },
   {
     name: "Sistemas & Painéis Sob Medida",
