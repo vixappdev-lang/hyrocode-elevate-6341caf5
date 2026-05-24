@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Check, Loader2, Sparkles } from "lucide-react";
-import { useNavigate } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
+import { Check, Sparkles } from "lucide-react";
 import { useReveal } from "@/hooks/use-reveal";
 import { ContactModal } from "./ContactModal";
-import { startCheckout } from "@/lib/checkout.functions";
+
+const CAKTO_CHECKOUT_URL = "https://pay.cakto.com.br/c9osims_898122";
 
 type Plan = {
   name: string;
@@ -15,16 +14,16 @@ type Plan = {
   desc: string;
   features: string[];
   highlighted: boolean;
-  cta: { type: "checkout" | "modal"; label: string; planKey?: "landing-premium" };
+  cta: { type: "external" | "modal"; label: string; href?: string };
 };
 
 const plans: Plan[] = [
   {
     name: "Landing Page - HyroCode",
     badge: null,
-    price: "R$ 497",
-    priceSuffix: "à vista",
-    installments: "ou 12× de R$ 49,70",
+    price: "R$ 597",
+    priceSuffix: "à vista no Pix",
+    installments: "ou no cartão 1× de R$ 597 · até 12× de R$ 61,67",
     desc: "Ideal para profissionais e marcas que querem presença forte, autoridade e conversão alta.",
     features: [
       "Logotipo feito do zero",
@@ -40,7 +39,7 @@ const plans: Plan[] = [
       "Estrutura 100% personalizada",
     ],
     highlighted: false,
-    cta: { type: "checkout", label: "QUERO ESSE", planKey: "landing-premium" },
+    cta: { type: "external", label: "QUERO UMA", href: CAKTO_CHECKOUT_URL },
   },
   {
     name: "Sistemas & Painéis Sob Medida",
@@ -67,20 +66,6 @@ const plans: Plan[] = [
 export function Pricing() {
   const ref = useReveal<HTMLDivElement>();
   const [modalOpen, setModalOpen] = useState(false);
-  const [loadingKey, setLoadingKey] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const startFn = useServerFn(startCheckout);
-
-  const onCheckout = async (planKey: "landing-premium") => {
-    setLoadingKey(planKey);
-    try {
-      const { slug } = await startFn({ data: { planKey } });
-      await navigate({ to: "/checkout/$slug", params: { slug } });
-    } catch (e) {
-      console.error(e);
-      setLoadingKey(null);
-    }
-  };
 
   const resolvedPlans = plans;
 
@@ -169,20 +154,19 @@ export function Pricing() {
                 ))}
               </ul>
 
-              {p.cta.type === "checkout" ? (
-                <button
-                  type="button"
-                  disabled={loadingKey === p.cta.planKey}
-                  onClick={() => p.cta.planKey && onCheckout(p.cta.planKey)}
-                  className={`btn-shine mt-8 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] disabled:opacity-70 ${
+              {p.cta.type === "external" ? (
+                <a
+                  href={p.cta.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`btn-shine mt-8 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-all hover:translate-y-[-1px] ${
                     p.highlighted
                       ? "bg-foreground text-background shadow-[var(--shadow-elegant)]"
                       : "glass text-foreground hover:bg-white/[0.06]"
                   }`}
                 >
-                  {loadingKey === p.cta.planKey && <Loader2 className="size-4 animate-spin" />}
                   {p.cta.label}
-                </button>
+                </a>
               ) : (
                 <button
                   type="button"
