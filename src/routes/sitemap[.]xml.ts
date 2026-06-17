@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
-const BASE_URL = "https://www.hyrocode.online";
+const BASE_URL = "https://hyrocode.online";
 
 interface SitemapEntry {
   path: string;
@@ -17,11 +17,6 @@ export const Route = createFileRoute("/sitemap.xml")({
         const today = new Date().toISOString().slice(0, 10);
         const entries: SitemapEntry[] = [
           { path: "/", lastmod: today, changefreq: "weekly", priority: "1.0" },
-          { path: "/#proposta", lastmod: today, changefreq: "monthly", priority: "0.7" },
-          { path: "/#portfolio", lastmod: today, changefreq: "weekly", priority: "0.8" },
-          { path: "/#como-funciona", lastmod: today, changefreq: "monthly", priority: "0.6" },
-          { path: "/#precos", lastmod: today, changefreq: "weekly", priority: "0.9" },
-          { path: "/#contato", lastmod: today, changefreq: "monthly", priority: "0.6" },
         ];
 
         const urls = entries.map((e) =>

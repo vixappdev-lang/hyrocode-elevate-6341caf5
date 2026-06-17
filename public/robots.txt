@@ -1,17 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
 Disallow: /api/
+Disallow: /checkout/
+Disallow: /aprovada
 
-User-agent: Googlebot
-Allow: /
-Disallow: /admin/
-Disallow: /api/
-
-User-agent: Bingbot
-Allow: /
-Disallow: /admin/
-Disallow: /api/
-
-Sitemap: https://www.hyrocode.online/sitemap.xml
-Sitemap: https://www.hyrocode.online/sitemap
+Sitemap: https://hyrocode.online/sitemap.xml
