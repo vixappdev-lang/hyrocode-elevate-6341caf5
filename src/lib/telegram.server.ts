@@ -1,7 +1,8 @@
 // Telegram Bot helpers (server-only).
-// Token is intentionally kept in code per user request.
+// Token is loaded from env (TELEGRAM_BOT_TOKEN), with legacy fallback for safety.
 
-export const TELEGRAM_BOT_TOKEN = "8884174946:AAHWBPkQDJLrp1XXgcP45vOZxlDA1IF5QLk";
+export const TELEGRAM_BOT_TOKEN =
+  process.env.TELEGRAM_BOT_TOKEN ?? "8884174946:AAHWBPkQDJLrp1XXgcP45vOZxlDA1IF5QLk";
 const BASE = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
 
 type TgMethod =
