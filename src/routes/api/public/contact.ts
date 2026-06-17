@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { tg, md } from "@/lib/telegram.server";
 
 const ContactSchema = z.object({
   nome: z.string().trim().min(1).max(120),
@@ -63,6 +64,50 @@ function escapeHtml(s: string) {
     .replace(/'/g, "&#039;");
 }
 
+async function notifyTelegram(payload: z.infer<typeof ContactSchema>) {
+  const { data: admins } = await supabaseAdmin
+    .from("telegram_admins")
+    .select("chat_id");
+  if (!admins?.length) return { sent: 0, reason: "no_admins" };
+
+  const digits = payload.whatsapp.replace(/\D/g, "");
+  const wa = digits.length >= 10
+    ? `https://wa.me/${digits.startsWith("55") ? digits : "55" + digits}`
+    : null;
+  const when = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+
+  const text =
+    `*📨 Nova solicitação \\(Valor a consultar\\)*\n\n` +
+    `👤 *${md(payload.nome)}*\n` +
+    `✉️ \`${md(payload.email)}\`\n` +
+    `📱 \`${md(payload.whatsapp)}\`\n` +
+    `📍 ${md(payload.estado)}\n` +
+    (payload.descricao ? `\n📝 ${md(payload.descricao)}\n` : "") +
+    `\n🕒 ${md(when)}`;
+
+  const reply_markup = wa
+    ? { inline_keyboard: [[{ text: "💬 Abrir WhatsApp", url: wa }]] }
+    : undefined;
+
+  let sent = 0;
+  for (const a of admins) {
+    try {
+      await tg("sendMessage", {
+        chat_id: a.chat_id,
+        text,
+        parse_mode: "MarkdownV2",
+        disable_web_page_preview: true,
+        link_preview_options: { is_disabled: true },
+        reply_markup,
+      });
+      sent++;
+    } catch (e) {
+      console.error("telegram notify failed for", a.chat_id, e);
+    }
+  }
+  return { sent };
+}
+
 export const Route = createFileRoute("/api/public/contact")({
   server: {
     handlers: {
@@ -95,7 +140,10 @@ export const Route = createFileRoute("/api/public/contact")({
           return jsonError("Não foi possível registrar sua solicitação. Tente novamente.", 500);
         }
 
-        // 2) Try to send email (no-op if Resend isn't configured)
+        // 2) Notify Telegram admins (non-blocking)
+        notifyTelegram(data).catch((e) => console.error("notifyTelegram error", e));
+
+        // 3) Try to send email (no-op if Resend isn't configured)
         const emailResult = await trySendResendEmail(data).catch((e) => {
           console.error("send email error", e);
           return { sent: false, reason: "exception" as const };
