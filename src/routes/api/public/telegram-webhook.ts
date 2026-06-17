@@ -3,29 +3,18 @@ import Stripe from "stripe";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { tg, md, flag, cleanUrl } from "@/lib/telegram.server";
 
-// -------------------- Auth --------------------
+// Only this chat_id can use the bot.
+const ADMIN_CHAT_ID = 8393477913;
+
 async function isAdmin(chatId: number): Promise<boolean> {
-  const { data } = await supabaseAdmin
-    .from("telegram_admins")
-    .select("chat_id")
-    .eq("chat_id", chatId)
-    .maybeSingle();
-  return !!data;
+  return chatId === ADMIN_CHAT_ID;
 }
 
-async function ensureFirstAdmin(chatId: number, username?: string, firstName?: string): Promise<boolean> {
-  const { count } = await supabaseAdmin
+async function ensureAdminRow(chatId: number, username?: string, firstName?: string) {
+  if (chatId !== ADMIN_CHAT_ID) return;
+  await supabaseAdmin
     .from("telegram_admins")
-    .select("chat_id", { count: "exact", head: true });
-  if ((count ?? 0) === 0) {
-    await supabaseAdmin.from("telegram_admins").insert({
-      chat_id: chatId,
-      username: username ?? null,
-      first_name: firstName ?? null,
-    });
-    return true;
-  }
-  return false;
+    .upsert({ chat_id: chatId, username: username ?? null, first_name: firstName ?? null }, { onConflict: "chat_id" });
 }
 
 // -------------------- Renderers --------------------
@@ -34,7 +23,7 @@ const PAGE_SIZE = 5;
 function mainMenu() {
   return {
     inline_keyboard: [
-      [{ text: "📨 Contatos", callback_data: "contacts:0" }],
+      [{ text: "📨 Consultar envios", callback_data: "contacts:0" }],
       [{ text: "💳 Checkouts", callback_data: "checkouts:0" }],
       [{ text: "🌍 Rastreio", callback_data: "tracking:0" }],
       [{ text: "📊 Resumo", callback_data: "summary" }],
@@ -263,15 +252,14 @@ export const Route = createFileRoute("/api/public/telegram-webhook")({
             const username: string | undefined = msg.from?.username;
             const firstName: string | undefined = msg.from?.first_name;
 
-            const becameAdmin = await ensureFirstAdmin(chatId, username, firstName);
-            const allowed = becameAdmin || (await isAdmin(chatId));
-            if (!allowed) {
+            if (chatId !== ADMIN_CHAT_ID) {
               await sendNoPreview({
                 chat_id: chatId,
                 text: "⛔ Acesso restrito. Este bot é privado.",
               });
               return new Response("ok");
             }
+            await ensureAdminRow(chatId, username, firstName);
 
             if (text.startsWith("/start") || text === "/menu") {
               const w = welcomeMessage(firstName);
