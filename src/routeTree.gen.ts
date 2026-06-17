@@ -16,6 +16,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CheckoutSlugRouteImport } from './routes/checkout.$slug'
 import { Route as ApiPublicTrackRouteImport } from './routes/api/public/track'
 import { Route as ApiPublicTelegramWebhookRouteImport } from './routes/api/public/telegram-webhook'
+import { Route as ApiPublicTelegramSetupRouteImport } from './routes/api/public/telegram-setup'
 import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as ApiPublicContactRouteImport } from './routes/api/public/contact'
 
@@ -55,6 +56,11 @@ const ApiPublicTelegramWebhookRoute =
     path: '/api/public/telegram-webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicTelegramSetupRoute = ApiPublicTelegramSetupRouteImport.update({
+  id: '/api/public/telegram-setup',
+  path: '/api/public/telegram-setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
   id: '/api/public/stripe-webhook',
   path: '/api/public/stripe-webhook',
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/checkout/$slug': typeof CheckoutSlugRoute
   '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
+  '/api/public/telegram-setup': typeof ApiPublicTelegramSetupRoute
   '/api/public/telegram-webhook': typeof ApiPublicTelegramWebhookRoute
   '/api/public/track': typeof ApiPublicTrackRoute
 }
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/checkout/$slug': typeof CheckoutSlugRoute
   '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
+  '/api/public/telegram-setup': typeof ApiPublicTelegramSetupRoute
   '/api/public/telegram-webhook': typeof ApiPublicTelegramWebhookRoute
   '/api/public/track': typeof ApiPublicTrackRoute
 }
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/checkout/$slug': typeof CheckoutSlugRoute
   '/api/public/contact': typeof ApiPublicContactRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
+  '/api/public/telegram-setup': typeof ApiPublicTelegramSetupRoute
   '/api/public/telegram-webhook': typeof ApiPublicTelegramWebhookRoute
   '/api/public/track': typeof ApiPublicTrackRoute
 }
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/checkout/$slug'
     | '/api/public/contact'
     | '/api/public/stripe-webhook'
+    | '/api/public/telegram-setup'
     | '/api/public/telegram-webhook'
     | '/api/public/track'
   fileRoutesByTo: FileRoutesByTo
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/checkout/$slug'
     | '/api/public/contact'
     | '/api/public/stripe-webhook'
+    | '/api/public/telegram-setup'
     | '/api/public/telegram-webhook'
     | '/api/public/track'
   id:
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/checkout/$slug'
     | '/api/public/contact'
     | '/api/public/stripe-webhook'
+    | '/api/public/telegram-setup'
     | '/api/public/telegram-webhook'
     | '/api/public/track'
   fileRoutesById: FileRoutesById
@@ -144,6 +156,7 @@ export interface RootRouteChildren {
   CheckoutSlugRoute: typeof CheckoutSlugRoute
   ApiPublicContactRoute: typeof ApiPublicContactRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
+  ApiPublicTelegramSetupRoute: typeof ApiPublicTelegramSetupRoute
   ApiPublicTelegramWebhookRoute: typeof ApiPublicTelegramWebhookRoute
   ApiPublicTrackRoute: typeof ApiPublicTrackRoute
 }
@@ -199,6 +212,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicTelegramWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/telegram-setup': {
+      id: '/api/public/telegram-setup'
+      path: '/api/public/telegram-setup'
+      fullPath: '/api/public/telegram-setup'
+      preLoaderRoute: typeof ApiPublicTelegramSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/stripe-webhook': {
       id: '/api/public/stripe-webhook'
       path: '/api/public/stripe-webhook'
@@ -224,6 +244,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutSlugRoute: CheckoutSlugRoute,
   ApiPublicContactRoute: ApiPublicContactRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
+  ApiPublicTelegramSetupRoute: ApiPublicTelegramSetupRoute,
   ApiPublicTelegramWebhookRoute: ApiPublicTelegramWebhookRoute,
   ApiPublicTrackRoute: ApiPublicTrackRoute,
 }

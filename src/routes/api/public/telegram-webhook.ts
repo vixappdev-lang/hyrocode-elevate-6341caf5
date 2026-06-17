@@ -34,6 +34,7 @@ const PAGE_SIZE = 5;
 function mainMenu() {
   return {
     inline_keyboard: [
+      [{ text: "📨 Contatos", callback_data: "contacts:0" }],
       [{ text: "💳 Checkouts", callback_data: "checkouts:0" }],
       [{ text: "🌍 Rastreio", callback_data: "tracking:0" }],
       [{ text: "📊 Resumo", callback_data: "summary" }],
@@ -142,6 +143,41 @@ async function renderTracking(page: number) {
   if (page + 1 < totalPages) row.push({ text: "Próxima »", callback_data: `tracking:${page + 1}` });
   if (row.length) nav.push(row);
   nav.push([{ text: "🔄 Atualizar", callback_data: `tracking:${page}` }, { text: "🏠 Menu", callback_data: "menu" }]);
+
+  return { text, reply_markup: { inline_keyboard: nav } };
+}
+
+async function renderContacts(page: number) {
+  const from = page * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+  const { data: rows, count } = await supabaseAdmin
+    .from("contact_submissions")
+    .select("id, nome, email, whatsapp, estado, descricao, created_at", { count: "exact" })
+    .order("created_at", { ascending: false })
+    .range(from, to);
+
+  const totalPages = Math.max(1, Math.ceil((count ?? 0) / PAGE_SIZE));
+  let text = `*📨 Contatos* — pág ${page + 1}/${totalPages} \\(total ${count ?? 0}\\)\n\n`;
+
+  if (!rows?.length) {
+    text += "_Nenhuma solicitação ainda\\._";
+  } else {
+    for (const r of rows) {
+      const when = new Date(r.created_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+      text += `👤 *${md(r.nome)}* · ${md(r.estado)}\n`;
+      text += `✉️ \`${md(r.email)}\`\n`;
+      text += `📱 \`${md(r.whatsapp)}\`\n`;
+      if (r.descricao) text += `📝 ${md(r.descricao)}\n`;
+      text += `🕒 ${md(when)}\n\n`;
+    }
+  }
+
+  const nav: Array<Array<{ text: string; callback_data: string }>> = [];
+  const row: Array<{ text: string; callback_data: string }> = [];
+  if (page > 0) row.push({ text: "« Anterior", callback_data: `contacts:${page - 1}` });
+  if (page + 1 < totalPages) row.push({ text: "Próxima »", callback_data: `contacts:${page + 1}` });
+  if (row.length) nav.push(row);
+  nav.push([{ text: "🔄 Atualizar", callback_data: `contacts:${page}` }, { text: "🏠 Menu", callback_data: "menu" }]);
 
   return { text, reply_markup: { inline_keyboard: nav } };
 }
@@ -276,6 +312,9 @@ export const Route = createFileRoute("/api/public/telegram-webhook")({
             } else if (data.startsWith("checkouts:")) {
               const page = parseInt(data.split(":")[1] || "0", 10);
               payload = await renderCheckouts(isNaN(page) ? 0 : page);
+            } else if (data.startsWith("contacts:")) {
+              const page = parseInt(data.split(":")[1] || "0", 10);
+              payload = await renderContacts(isNaN(page) ? 0 : page);
             } else if (data.startsWith("tracking:")) {
               const page = parseInt(data.split(":")[1] || "0", 10);
               payload = await renderTracking(isNaN(page) ? 0 : page);
