@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as SitemapRouteImport } from './routes/sitemap'
 import { Route as AprovadaRouteImport } from './routes/aprovada'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CheckoutSlugRouteImport } from './routes/checkout.$slug'
@@ -23,11 +22,6 @@ import { Route as ApiPublicContactRouteImport } from './routes/api/public/contac
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapRoute = SitemapRouteImport.update({
-  id: '/sitemap',
-  path: '/sitemap',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AprovadaRoute = AprovadaRouteImport.update({
@@ -75,7 +69,6 @@ const ApiPublicContactRoute = ApiPublicContactRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/aprovada': typeof AprovadaRoute
-  '/sitemap': typeof SitemapRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
   '/api/public/contact': typeof ApiPublicContactRoute
@@ -87,7 +80,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/aprovada': typeof AprovadaRoute
-  '/sitemap': typeof SitemapRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
   '/api/public/contact': typeof ApiPublicContactRoute
@@ -100,7 +92,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/aprovada': typeof AprovadaRoute
-  '/sitemap': typeof SitemapRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
   '/api/public/contact': typeof ApiPublicContactRoute
@@ -114,7 +105,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/aprovada'
-    | '/sitemap'
     | '/sitemap.xml'
     | '/checkout/$slug'
     | '/api/public/contact'
@@ -126,7 +116,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/aprovada'
-    | '/sitemap'
     | '/sitemap.xml'
     | '/checkout/$slug'
     | '/api/public/contact'
@@ -138,7 +127,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/aprovada'
-    | '/sitemap'
     | '/sitemap.xml'
     | '/checkout/$slug'
     | '/api/public/contact'
@@ -151,7 +139,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AprovadaRoute: typeof AprovadaRoute
-  SitemapRoute: typeof SitemapRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   CheckoutSlugRoute: typeof CheckoutSlugRoute
   ApiPublicContactRoute: typeof ApiPublicContactRoute
@@ -168,13 +155,6 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap': {
-      id: '/sitemap'
-      path: '/sitemap'
-      fullPath: '/sitemap'
-      preLoaderRoute: typeof SitemapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/aprovada': {
@@ -239,7 +219,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AprovadaRoute: AprovadaRoute,
-  SitemapRoute: SitemapRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   CheckoutSlugRoute: CheckoutSlugRoute,
   ApiPublicContactRoute: ApiPublicContactRoute,
@@ -251,3 +230,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
