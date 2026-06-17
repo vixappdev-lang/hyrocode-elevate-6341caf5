@@ -75,7 +75,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
       { name: "googlebot", content: "index, follow" },
       { name: "theme-color", content: "#0a0a0a" },
-      { title: "HyroCode | Sistemas digital" },
+      { title: "HyroCode |  Criação de site e Aplicativos" },
       {
         name: "description",
         content:
@@ -91,12 +91,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "HyroCode" },
       { property: "og:locale", content: "pt_BR" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "HyroCode | Sistemas digital" },
-      { name: "twitter:title", content: "HyroCode | Sistemas digital" },
-      { property: "og:description", content: "HYROCODE cria soluções personalizadas, modernas e funcionais para destacar seu negócio online. Transformamos sua ideia em sucesso digital!" },
-      { name: "twitter:description", content: "HYROCODE cria soluções personalizadas, modernas e funcionais para destacar seu negócio online. Transformamos sua ideia em sucesso digital!" },
+      { property: "og:title", content: "HyroCode |  Criação de site e Aplicativos" },
+      { name: "twitter:title", content: "HyroCode |  Criação de site e Aplicativos" },
+      { property: "og:description", content: "HyroCode Digital Studio creates premium, high-level websites for brands." },
+      { name: "twitter:description", content: "HyroCode Digital Studio creates premium, high-level websites for brands." },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/5wz0PRKx06bTGHTlSFcAWZ4xhd12/social-images/social-1779141516270-hyrocode.webp" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/5wz0PRKx06bTGHTlSFcAWZ4xhd12/social-images/social-1779141516270-hyrocode.webp" },
+      { name: "description", content: "HyroCode Digital Studio creates premium, high-level websites for brands." },
     ],
     links: [
       { rel: "icon", type: "image/png", sizes: "512x512", href: "/favicon.png" },
