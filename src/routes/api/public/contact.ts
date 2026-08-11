@@ -64,11 +64,19 @@ function escapeHtml(s: string) {
     .replace(/'/g, "&#039;");
 }
 
+// Owner chat id — always notified, independent of the database.
+const ADMIN_CHAT_ID = 8393477913;
+
 async function notifyTelegram(payload: z.infer<typeof ContactSchema>) {
-  const { data: admins } = await supabaseAdmin
-    .from("telegram_admins")
-    .select("chat_id");
-  if (!admins?.length) return { sent: 0, reason: "no_admins" };
+  const chatIds = new Set<number>([ADMIN_CHAT_ID]);
+  try {
+    const { data: admins } = await supabaseAdmin.from("telegram_admins").select("chat_id");
+    for (const a of admins ?? []) chatIds.add(Number(a.chat_id));
+  } catch (e) {
+    console.error("telegram_admins fetch failed (using owner only)", e);
+  }
+  const admins = [...chatIds].map((chat_id) => ({ chat_id }));
+
 
   const digits = payload.whatsapp.replace(/\D/g, "");
   const wa = digits.length >= 10
