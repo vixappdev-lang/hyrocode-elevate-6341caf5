@@ -133,23 +133,33 @@ export const Route = createFileRoute("/api/public/contact")({
         }
         const data = parsed.data;
 
-        // 1) Persist to database (always)
-        const { error: dbError } = await supabaseAdmin
-          .from("contact_submissions")
-          .insert({
-            nome: data.nome,
-            email: data.email,
-            estado: data.estado,
-            whatsapp: data.whatsapp,
-            descricao: data.descricao || null,
-          });
-        if (dbError) {
-          console.error("contact_submissions insert error", dbError);
+        // 1) Notify Telegram owner first (works even if the database is unavailable)
+        const notified = await notifyTelegram(data).catch((e) => {
+          console.error("notifyTelegram error", e);
+          return { sent: 0 };
+        });
+
+        // 2) Persist to database (best-effort)
+        let stored = true;
+        try {
+          const { error: dbError } = await supabaseAdmin
+            .from("contact_submissions")
+            .insert({
+              nome: data.nome,
+              email: data.email,
+              estado: data.estado,
+              whatsapp: data.whatsapp,
+              descricao: data.descricao || null,
+            });
+          if (dbError) throw dbError;
+        } catch (e) {
+          stored = false;
+          console.error("contact_submissions insert error", e);
+        }
+        if (!stored && !notified.sent) {
           return jsonError("Não foi possível registrar sua solicitação. Tente novamente.", 500);
         }
 
-        // 2) Notify Telegram admins (non-blocking)
-        notifyTelegram(data).catch((e) => console.error("notifyTelegram error", e));
 
         // 3) Try to send email (no-op if Resend isn't configured)
         const emailResult = await trySendResendEmail(data).catch((e) => {
