@@ -12,10 +12,15 @@ async function isAdmin(chatId: number): Promise<boolean> {
 
 async function ensureAdminRow(chatId: number, username?: string, firstName?: string) {
   if (chatId !== ADMIN_CHAT_ID) return;
-  await supabaseAdmin
-    .from("telegram_admins")
-    .upsert({ chat_id: chatId, username: username ?? null, first_name: firstName ?? null }, { onConflict: "chat_id" });
+  try {
+    await supabaseAdmin
+      .from("telegram_admins")
+      .upsert({ chat_id: chatId, username: username ?? null, first_name: firstName ?? null }, { onConflict: "chat_id" });
+  } catch (e) {
+    console.error("ensureAdminRow failed", e);
+  }
 }
+
 
 // -------------------- Renderers --------------------
 const PAGE_SIZE = 5;
